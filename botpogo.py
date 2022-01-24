@@ -16,8 +16,8 @@ def listener(messages):
         chatid = m.chat.id
         if m.content_type == 'text':
             text = m.text
-            tb.send_message(chatid, "В сочи " + w.get_detailed_status())
-            tb.send_message(chatid, "Температура у тебя" + str(temp))
+            tb.send_message(chatid, "Баба ванга мне сказала, в сочи " + w.get_detailed_status())
+            tb.send_message(chatid, "Температура" + str(temp))
             if temp < 5:
                 tb.send_message(chatid, "Морозец ждет твою жопку")
             elif temp < 15:
