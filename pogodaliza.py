@@ -261,7 +261,7 @@ class Iteraror2:
 
 func2 = Iteraror2(3,5)
 print(next(func2))
-"""
+
 
 circle_areas = [3.56773, 5.57668, 4.00914, 56.24241, 9.01344, 32.00013]
 circle_areas = list(map(round,circle_areas,range(1,len(circle_areas)+1))) # Map пропускает каждый обьект через функцию
@@ -312,3 +312,11 @@ print(reduce(lambda a,b: a*b,my_numbers,1))
 # test_output_contains("[18.922, 37.088, 10.562, 95.453, 4.666, 78.854, 21.068]") 
 # test_output_contains("['olumide', 'josiah', 'omoseun']") 
 # test_output_contains("24840") success_msg("Congrats! Nice work.")
+"""
+
+class Human:
+    pass
+
+
+class Worker(Human):
+    pass
