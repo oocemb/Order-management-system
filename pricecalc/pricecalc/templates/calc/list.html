@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title%} {% endblock %}
+
+{% block content %} 
+    <div class="jumbotron">
+    <h1>My fake blog!</h1>
+    {% if user.is_authenticated %}
+      <p>Logged as {{ user.username }}</p>
+      <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+    {% else %}
+      <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
+        Login
+      </a>
+    {% endif %}
+    </div>
+
+
+    {% if latext_calc_list %}
+        {% for a in latext_calc_list %}
+            <a href="{% url 'calc:detail' a.id %}">{{a.calc_title}}</a>
+        {% endfor %}     
+    {% else %}
+        Calkulei net 
+    {% endif %}  
+{% endblock %}

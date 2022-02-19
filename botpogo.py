@@ -8,6 +8,7 @@ obs = owm.weather_at_place('Сочи')
 w = obs.get_weather()
 temp = w.get_temperature('celsius')["temp"]
 
+
 def listener(messages):
     """
     When new messages arrive TeleBot will call this function.
@@ -29,7 +30,8 @@ def listener(messages):
 
 tb = telebot.TeleBot('5252287449:AAERORAX4jk8UwDy46CXkvHwN8oczASQl34')
 tb.set_update_listener(listener) #register listener
-tb.polling()
+# постоянно обращается к серверам телеграмм (лонгполинг)
+#tb.polling()
 #Use none_stop flag let polling will not stop when get new message occur error.
 tb.polling(none_stop=True)
 # Interval setup. Sleep 3 secs between request new message.

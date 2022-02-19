@@ -208,7 +208,7 @@ vlannat.pop(-2)
 nat2 = (' '.join(vlannat))
 print(nat2)
 '''
-
+'''
 mac = "AAAA:BBBB:CCCC"
 mac2 = '.'.join(mac.split()[0].split(":"))
 print(mac2)
@@ -227,7 +227,7 @@ command2 = "switchport trunk allowed vlan 1,3,8,9"
 vlan1 = set(command1.split()[-1].split(','))
 vlan1 = list(vlan1.intersection(set(command2.split()[-1].split(','))))
 print(vlan1)
-
+'''
 
 """Итераторы примеры
 class Iteraror1:
@@ -312,11 +312,96 @@ print(reduce(lambda a,b: a*b,my_numbers,1))
 # test_output_contains("[18.922, 37.088, 10.562, 95.453, 4.666, 78.854, 21.068]") 
 # test_output_contains("['olumide', 'josiah', 'omoseun']") 
 # test_output_contains("24840") success_msg("Congrats! Nice work.")
-"""
-
-class Human:
-    pass
 
 
-class Worker(Human):
-    pass
+from http import server
+import socket
+from urllib import request, response
+
+URLS = {
+    '/': 'hello index',
+    '/blog': 'hello blog' 
+}
+
+def parse_request(request):
+    parsed = request.split(' ')
+    method = parsed[0]
+    url = parsed[1]
+    return (method,url)
+
+def generate_headers(method,url):
+    if not method == 'GET':
+        return ('HTTP/1.1 405 Mehtod not allowed\n\n',405)
+    if not url is URLS:  # список все доступных урлов в джанго словарь в фласке список
+        return ('HTTP/1.1 404 Not found\n\n',404)
+    return ('HTTP/1.1 200 ok\n\n',200)
+
+def generate_content(code, url):
+    if code == 404:
+        return '<h1>404</h1><p>Not found</p>'
+    if code == 405:
+        return '<h1>405</h1><p>Method not allowed</p>'
+    return '<h1>{}</h1>'.format(URLS[url])
+
+def generate_response(request):
+    method, url = parse_request(request)
+    headers, code = generate_headers(method,url)
+    body = generate_content(code, url)
+    return (headers + body).encode()
+
+def run():
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1) # убирает таймаут с повторного запуска программы
+    server_socket.bind(('localhost',5000))                              # по умолчанию что о может не дойти и есть 1,5мин таймаут
+    server_socket.listen()
+
+    while True:
+        client_socket, addr = server_socket.accept() # возвращает кортеж клиет сокет и адрес
+        request = client_socket.recv(1024) # kolvo bite v pakete
+        print(request) # .decode('utf-8') можно так в декод виде
+        print(addr)
+
+        response = generate_response(request.decode('utf-8'))
+
+        client_socket.sendall(response)
+        client_socket.close
+
+
+if __name__ == '__main__':
+    run()
+    """
+
+def genetare_nubmers(n,m,prefix=None):
+    prefix = prefix or []
+    if m == 0:
+        print(prefix)
+        return
+    for digit in range(n):
+        prefix.append(digit)
+        genetare_nubmers(n,m-1,prefix)
+        prefix.pop()
+
+genetare_nubmers(2,2)
+
+def genetare_perestanovki(n,m=-1,prefix=None):
+    m = n if m == -1 else m
+    prefix = prefix or []
+    if m == 0:
+        print(*prefix) # печатает список не в скобках а подряд через пробел (можно добавить end='' , sep='')
+        return
+    for number in range(1, n+1):
+        if find(number, prefix):  # ищем есть ли уже текущее n в текущем префиксе
+            continue
+        prefix.append(number)
+        genetare_perestanovki(n,m-1,prefix)
+        prefix.pop()
+
+def find(n,prefix):
+    for x in prefix:
+        if x == n:
+            return True
+    return False
+
+genetare_perestanovki(3,3)
+
+

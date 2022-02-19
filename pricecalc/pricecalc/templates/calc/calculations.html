@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title%} Current calculations {% endblock %}
+
+{% block content %} 
+    {% if calculationlist %}
+        {% for calcul in calculationlist %}
+            <a href="{% url 'calc:detail' user.id %}">{{calcul.price_title}}</a>
+            <p></p>
+        {% endfor %}     
+    {% else %}
+        Calkulei net 
+    {% endif %} 
+    
+<br>
+<br>
+<form action="{% url 'calc:add_calculation' user.id %}" method="POST">
+    {%csrf_token%}
+    <input type="text" required placeholder="Имя расчёта" name="name"><br>
+    </textarea><br>
+    <button type="submit">Создать рассчёт</button>
+</form>
+{% endblock %}
