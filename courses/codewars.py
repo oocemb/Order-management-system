@@ -141,3 +141,21 @@
 #   return print(i)
 
 # count_letter(['python', 'c++', 'c', 'scala', 'java'],"a")
+
+
+# import random
+# from tkinter import Y
+# a = []
+# LENGTH_a = 50
+# y = 1000
+# a = [random.randrange(1,1000,1) for i in range(LENGTH_a)]
+# print(a)
+# for i in range(LENGTH_a):
+#     if a[i]%6 > 0:
+#         y_curent = a[i]     
+#         if y_curent < y:
+#             y = y_curent
+# for i in range(LENGTH_a):
+#     if a[i]%6 > 0:
+#         a[i] = y
+# print(a)

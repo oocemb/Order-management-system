@@ -1,3 +1,65 @@
+"""
+Функция генерации всех чисел заданной длины m, заданной системы счисления n
+def genetare_nubmers(n,m,prefix=None):
+    prefix = prefix or []
+    if m == 0:
+        print(prefix)
+        return
+    for digit in range(n):
+        prefix.append(digit)
+        genetare_nubmers(n,m-1,prefix)
+        prefix.pop()
+
+genetare_nubmers(2,3)
+"""
+
+"""
+Функция генерации всех перестановок сист.счис. n, длинной m (или n default) 
+def genetare_perestanovki(n,m=-1,prefix=None):
+    m = n if m == -1 else m
+    prefix = prefix or []
+    if m == 0:
+        print(*prefix) # печатает список не в скобках а подряд через пробел (можно добавить end='' , sep='')
+        return
+    for number in range(1, n+1):
+        if find(number, prefix):  # ищем есть ли уже текущее n в текущем префиксе
+            continue
+        prefix.append(number)
+        genetare_perestanovki(n,m-1,prefix)
+        prefix.pop()
+
+def find(n,prefix):
+    for x in prefix:
+        if x == n:
+            return True
+    return False
+
+genetare_perestanovki(5,3)
+"""
+
+"""
+circle_areas = [3.56773, 5.57668, 4.00914, 56.24241, 9.01344, 32.00013]
+circle_areas = list(map(round,circle_areas,range(1,len(circle_areas)+1))) # Map пропускает каждый обьект через функцию
+print(circle_areas)
+
+my_strings = ['a', 'b', 'c', 'd', 'e']
+my_numbers = [1,2,3,4,5,6,7]
+results = zip(my_strings, my_numbers) # можно листом восстановить
+print(results)
+results1 = list(map(lambda x,y: (x,y), my_strings, my_numbers))
+print(results1)
+
+scores = [66, 90, 68, 59, 76, 60, 88, 74, 81, 65]
+def otlichnik(ball):
+    #if ball > 80:
+    #    return True
+    return ball > 80
+print(list(filter(otlichnik,scores)))
+
+dromes = ("demigod", "rewire", "madam", "freer", "anutforajaroftuna", "kiosk")
+print(list(filter(lambda word: word[0]==word[-1],dromes)))
+"""
+
 """Функция Левенштейна определение минимального редакционного растояние между двумя строками"""
 def levenstein(A,B):
     F=[[(i+j) if i*j==0 else 0 for j in range(len(B)+1)] for i in range(len(A)+1)]

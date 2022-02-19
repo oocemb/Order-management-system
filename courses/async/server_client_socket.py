@@ -34,7 +34,7 @@ def generate_response(request):
     return (headers + body).encode()
 
 def run():
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # перый прмрт IP(4 по умочнию) втрой TCP
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # перый порт IP(4 по умочнию) втрой TCP
     server_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1) # убирает таймаут с повторного запуска программы
     server_socket.bind(('localhost',5000))                              # по умолчанию что о может не дойти и есть 1,5мин таймаут
     server_socket.listen()
