@@ -76,7 +76,7 @@
         <a href="{% url 'postcreate' %}" class="btn btn-ligth">Create post</a>
         <a href="{% url 'tagcreate' %}" class="btn btn-ligth">Create tag</a>
         <a href="{{admin_obj.get_update_url}}" class="btn btn-ligth edit" style="{%if detail%} display: block;{%endif%}">Edit</a>
-        <a href="{{admin_obj.get_delete_url}}" class="btn btn-danger delete" style="{%if detail%} display: block;{%endif%}">Delete</a>
+        <a href="{{admin_obj.get_delete_url}}" class="btn btn-danger delete" {%if detail%} style="display: block;"{%endif%}>Delete</a>
         {%endblock%}
     </div>
     {%endif%}
