@@ -107,7 +107,7 @@ def comment(request, calc_id):
         raise Http404("Not found")
 
     a.comment_set.create(author_name = request.POST['name'], comment_text = request.POST['text'])
-    return HttpResponseRedirect(reverse('calc:detail', args = (a.id,)))
+    return HttpResponseRedirect(reverse('detail', args = (a.id,)))
 
 def users(request):
     userlist = User.objects.order_by('id')

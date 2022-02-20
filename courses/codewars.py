@@ -159,3 +159,131 @@
 #     if a[i]%6 > 0:
 #         a[i] = y
 # print(a)
+
+# def rot13(message):
+#     alpha = 'abcdefghijklmnopqrstuvwxyz'
+#     message = list(message)
+#     for i in range(len(message)):
+#         flag=False
+#         if message[i].isalpha() and message[i].isupper():
+#             flag=True
+#             message[i] = message[i].lower()
+#         for j in range(len(alpha)):
+#             if message[i]==alpha[j]:
+#                 if flag: 
+#                     message[i] = alpha[(j+13)%len(alpha)].upper()
+#                     break
+#                 message[i] = alpha[(j+13)%len(alpha)]
+#                 break
+#     return print(''.join(message))
+
+# rot13('qweQQwwW')
+
+# def up_array(arr):
+#     for i in range(len(arr)):
+#         if arr[i] < 0: return None
+#         arr[i] = str(arr[i])
+#     arr = list(str(int(''.join(arr))+1))
+#     for i in range(len(arr)):
+#         arr[i] = int(arr[i])
+#     return arr
+# up_array([5,7,4])
+
+# def done_or_not(board):
+#     for i in range(len(board)):
+#         if len(set(board[i])) < 9: return "Try again!"
+#         if len({board[j][i] for j in range(len(board))}) < 9: return "Try again!"
+#     for i in range(3):
+#         for j in range(3):
+#             for k in range(3):
+#                 set1=set()
+#                 set1=set1.union({board[i*3+k][j*3] for k in range(3)},{board[i*3+k][j*3+1] for k in range(3)},{board[i*3+k][j*3+2] for k in range(3)})
+#                 print(set1)
+#             if len(set1) < 9: return "Try again!"
+#     return "Finished!"
+
+# done_or_not([[1, 3, 2, 5, 7, 9, 4, 6, 8]
+#             ,[4, 9, 8, 2, 6, 1, 3, 7, 5]
+#             ,[7, 5, 6, 3, 8, 4, 2, 1, 9]
+#             ,[6, 4, 3, 1, 5, 8, 7, 9, 2]
+#             ,[5, 2, 1, 7, 9, 3, 8, 4, 6]
+#             ,[9, 8, 7, 4, 2, 6, 5, 3, 1]
+#             ,[2, 1, 4, 9, 3, 5, 6, 8, 7]
+#             ,[3, 6, 5, 8, 1, 7, 9, 2, 4]
+#             ,[8, 7, 9, 6, 4, 2, 1, 5, 3]])
+
+
+# def dirReduc(arr):
+#     Flag=True
+#     while Flag:
+#         Flag=False
+#         if len(arr) == 0: return []
+#         for i in range(1,len(arr)):
+#             if Flag: break
+#             for x,y in zip(('NORTH','SOUTH','WEST','EAST'),('SOUTH','NORTH','EAST','WEST')):
+#                 if arr[i] == x and arr[i-1] == y:
+#                     arr.pop(i)
+#                     arr.pop(i-1)
+#                     Flag=True
+#                     break
+#     return arr
+
+# print(dirReduc(["NORTH", "SOUTH", "SOUTH", "EAST", "WEST", "NORTH", "WEST"]))
+
+# def next_bigger(n):
+#     if n < 10 or list(str(n))[::-1] == sorted(list(str(n)[::-1])): return -1
+#     n = list(str(n))
+#     for i in range(len(n)-1,0,-1):   
+#         if n[i] > n[i-1]:
+#             n =n[:i]+sorted(n[i:])
+#             for j in range(i,len(n)): 
+#                 if n[i-1] < str(int(n[j])): 
+#                     n[i-1],n[j]=n[j],n[i-1]
+#                     return int("".join(n))
+
+# next_bigger(551321)
+# next_bigger(552983)
+# next_bigger(555983)
+
+# def rgb(r, g, b):
+#     a=[r,g,b]
+#     for i in range(len(a)):
+#         if a[i]<0: a[i] = 0
+#         if a[i]>255: a[i] = 255
+#         a[i]=str(hex(a[i]))[2:].upper()
+#         if len(a[i]) == 1: a[i]='0'+a[i]
+#     return ''.join(a)
+# print(rgb(148,0,211))
+
+# def rgb2(r,g,b):
+#     round = lambda x: min(255, max(x,0))
+#     return "{:02X}{:02X}{:02X}".format(round(r),round(g),round(b))
+# print(rgb2(148,0,211))
+
+# import re
+
+# def top_3_words(text):
+#     counter = {}
+#     text = re.sub('[,]', ' ',text)
+#     text = re.sub(r'[^a-z,\']', ' ', text.lower()).split()
+#     for txt in text:
+#         txt = re.sub('[\']','Z',txt)
+#         if not txt.isalpha(): continue
+#         txt = re.sub('[Z]','\'',txt)
+#         if set(txt) == {"'"}: continue
+#         counter[txt] = int(counter.get(txt) or 0) + 1
+#     list=[]
+#     for i in range(len(counter)):
+#         key1 = sorted(counter, key=counter.__getitem__)[-1]
+#         list.append(str(key1))
+#         if len(list) == 3: return list
+#         counter.pop(key1)
+#     return list
+
+# print(top_3_words("  //wont Won't wOn't "))
+# print(top_3_words("e e e e DDD ddd 7DdD: ddd7ddd ddd aa aA7Aa, bb cc cC e e e"))
+# from collections import Counter
+# def top_3_words(text):
+#     c = Counter(re.findall(r"(?=.*[a-z])[a-z']+", text.lower()))
+#     return [w for w, _ in c.most_common(3)]
+

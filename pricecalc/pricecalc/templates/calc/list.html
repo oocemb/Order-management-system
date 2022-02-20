@@ -18,7 +18,7 @@
 
     {% if latext_calc_list %}
         {% for a in latext_calc_list %}
-            <a href="{% url 'calc:detail' a.id %}">{{a.calc_title}}</a>
+            <a href="{% url 'detail' a.id %}">{{a.calc_title}}</a>
         {% endfor %}     
     {% else %}
         Calkulei net 
