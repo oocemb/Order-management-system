@@ -24,8 +24,7 @@ urlpatterns = [
     path('', redirect_blog),
     path('', include('calc.urls')),
     path('', include('social_django.urls', namespace='social')),
-    path('logout/', views.LogoutView.as_view(), name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/', include('accounts.urls')),
+    # path('logout/', views.LogoutView.as_view(), name='logout'),
     path('admin/', admin.site.urls),
 ]

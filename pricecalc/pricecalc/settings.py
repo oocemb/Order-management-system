@@ -33,7 +33,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = [] # хосты которые обслуживает сайт / потом после залива масайт.ком(для защиты)
+ALLOWED_HOSTS = [] # хосты которые обслуживает сайт / потом после хостинга my_site.com(для защиты)
 
 
 INSTALLED_APPS = [
@@ -45,24 +45,33 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'calc.apps.CalcConfig',
     'crispy_forms',
-    #'accounts', # скорей всего неправлиьно
+    'oauth2_provider',
     'social_django',
+    'rest_framework_social_oauth2',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-#LOGIN_REDIRECT_URL =  '/accounts/logout/'
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.vk.VKOAuth2',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
 )
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    )
+}
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('GOOGLE_OAUTH2_SECRET')
-
+SOCIAL_AUTH_VK_OAUTH2_KEY = env('VK_OAUTH2_KEY')
+SOCIAL_AUTH_VK_OAUTH2_SECRET = env('VK_OAUTH2_SECRET')
 LOGIN_URL = '/auth/login/google-oauth2/'
 
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = ''
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 

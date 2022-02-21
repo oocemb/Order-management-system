@@ -9,7 +9,7 @@
       <p>Logged as {{ user.username }}</p>
       <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
     {% else %}
-      <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
+      <a class="btn btn-primary" href="{% url 'login' %}">
         Login
       </a>
     {% endif %}
