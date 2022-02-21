@@ -12,7 +12,7 @@ urlpatterns = [
     path('<int:calc_id>/', detail, name = 'detail'),
     path('<int:calc_id>/leave_comment/', comment, name = 'comment'),
 
-    path('posts/', index, name = 'posts_list'),
+    path('posts/', posts_list, name = 'posts_list'),
     path('post/create/', PostCreate.as_view(), name='postcreate'),
     path('post/<str:slug>/', PostDetail.as_view(), name='postdetail'),
     path('post/<str:slug>/update/', PostUpdate.as_view(), name='postupdate'),

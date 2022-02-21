@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title%} tag create {% endblock %}
+{% block title%} Tag create - {{block.super}} {% endblock %}
 
 {% block content %} 
    
@@ -10,7 +10,7 @@
         
         <div class="form-group">
             {% if form.errors %}
-            `<div class="alert alert-danger">
+            <div class="alert alert-danger">
                 {{form.errors}}
             </div>
             {% endif %}
@@ -19,6 +19,6 @@
         </div>
         
 <br>
-        <button type="submit" class="btn btn-primary">Comment now</button>
+        <button type="submit" class="btn btn-primary">Create tag</button>
     </form>
 {% endblock %}

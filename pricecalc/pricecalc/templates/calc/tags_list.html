@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title%} Tagssssss - {{block.super}} {% endblock %}
+{% block title%} Tags list - {{block.super}} {% endblock %}
 
 {% block content %} 
 
-    <h2>Tags list:</h2>
-        {% for tag in tags %}
-            <a href="{{ tag.get_absolute_url }}">{{tag.title}}</a>
-            <p></p>
-        {% endfor %}     
+    <h2 class="mb-4">Tags list:</h2>
+    {% for tag in tags %}
+        <a class="btn btn-outline-primary" href="{{ tag.get_absolute_url }}">{{tag.title|title}}</a>
+    {% endfor %} 
+            
 
 {% endblock %}

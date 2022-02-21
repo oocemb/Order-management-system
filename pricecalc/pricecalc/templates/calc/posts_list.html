@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title%} Последние статьи {% endblock %}
+{% block title%} Posts - {{block.super}} {% endblock %}
 
 {% block content %} 
+    <h2 class="mb-5">Posts:</h2>
     {% if posts %}
         {% for post in posts.object_list %}
-            <a href="{{post.get_absolute_url}}">{{post.title}}</a>
-            <p></p>
+            {%include 'calc/includes/post_card_templ.html'%}
         {% endfor %}     
     {% else %}
-        Postov poka net 
+        <h3>No posts</h3>
     {% endif %}
 
 {% endblock %}
