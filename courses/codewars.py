@@ -287,3 +287,104 @@
 #     c = Counter(re.findall(r"(?=.*[a-z])[a-z']+", text.lower()))
 #     return [w for w, _ in c.most_common(3)]
 
+# import timeit
+
+# code = """
+# def f(n):
+#     nums=[2]
+#     for n in range(2,n):
+#         flag = True
+#         for num in nums:
+#             if n%num == 0:
+#                 flag = False
+#                 break
+#         if flag: nums.append(n)
+#     return nums
+# f(423727)
+# """
+# # time1 = timeit.timeit(code, number=10)/10 
+# # print(time1) # очень долго..... плохой код
+
+
+# code2 = """
+# def primfacs(n):
+#    i = 2
+#    primfac = set()
+#    while i * i <= n:
+#        while n % i == 0:
+#            primfac.add(i)
+#            n //= i
+#        i += 1
+#    if n > 1:
+#        primfac.add(n)
+#    return primfac
+
+# def sum_for_list(lst):
+#     arr = {}
+#     d = 2
+#     ps = set()
+#     for num in lst:
+#         for p in primfacs(abs(num)):
+#             if num%p == 0:
+#                 arr[p] = int(arr.get(p) or 0) + num
+#     return [list(b) for b in sorted(arr.items())]
+
+# print(sum_for_list([15,210000,744721,30,-45]))
+# """
+# time1 = timeit.timeit(code2, number=10)/10 
+# print(time1)
+
+# def sum_for_list(lst):
+#     arr = {}
+#     for num in lst:
+#         p = 2
+#         m = abs(num)
+#         while p*p <= m:
+#             t = 0
+#             while m % p == 0:
+#                 if t < 1: arr[p] = int(arr.get(p) or 0) + num
+#                 m //= p
+#                 t += 1
+#             p += 1
+#         if m > 1: arr[m] = int(arr.get(m) or 0) + num
+#     return [list(b) for b in sorted(arr.items())]
+
+# print(sum_for_list([15,210000,744721,30,-45]))
+
+# def genetare_perestanovki(n,m=-1,prefix=None):
+#     m = n if m == -1 else m
+#     prefix = prefix or []
+#     if m == 0:
+#         print(*prefix) # печатает список не в скобках а подряд через пробел (можно добавить end='' , sep='')
+#         return
+#     for number in range(0, n+1):
+#         if find(number, prefix):  # ищем есть ли уже текущее n в текущем префиксе
+#             continue
+#         prefix.append(number)
+#         genetare_perestanovki(n,m-1,prefix)
+#         prefix.pop()
+
+# def find(n,prefix):
+#     for x in prefix:
+#         if x == n:
+#             return True
+#     return False
+
+# def u3(str1):
+#     answer = str1.split(" + ")[-1].split(" = ")[-1]
+#     example = str1.split(" + ")[:-1] 
+#     example.append(str1.split(" + ")[-1].split(" = ")[0])
+#     letts = {i for i in str1 if i.isupper()}
+#     dict = {let:i for i,let in enumerate(letts)}
+#     genetare_perestanovki(9,len(letts))
+#     an,ex = 1,2
+#     while an != ex:
+#         for i in range(len(example)):
+#             example[i] = [dict[j] for j in example[i]]
+#         answer = [dict[j] for j in answer]
+#         an = int(''.join(map(str,answer)))
+#         ex = sum([int(''.join(map(str,exam))) for exam in example])
+#     return answer,example,letts,dict,an,ex
+
+# print(u3("ELEVEN + NINE + FIVE + FIVE = THIRTY"))
+
