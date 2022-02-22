@@ -3,7 +3,6 @@ from .views import *
 
 #app_name = "calc"
 urlpatterns = [
-    
     path('users/', users, name = 'users'),
     path('add_user/', add_user, name = 'add_user'),
     path('calc/', index_calc, name = 'index_calc'),

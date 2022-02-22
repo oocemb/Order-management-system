@@ -31,8 +31,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="http://127.0.0.1:8000/admin">Admin</a>
                 </li>
-                
-                
             </ul>
             <form class="d-flex" action="{%url 'posts_list' %}">
                 <input class="form-control me-2" type="search" placeholder="Search posts" aria-label="Search" name="search">
@@ -41,9 +39,18 @@
                     <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
                     <a class="nav-link disabled" href="#">{{ user.username }}</a>
                 {% else %}
-                    <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
-                    Login
-                    </a>
+                <ul class="navbar-nav mb-5 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="btn btn-primary dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Login
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{% url 'social:begin' 'google-oauth2' %}">Login G+</a></li>
+                            <li><a class="dropdown-item" href="{% url 'social:begin' 'vk-oauth2' %}">Login VK</a></li>
+                            <li><a class="dropdown-item" href="{% url 'social:begin' 'facebook' %}">Login FB</a></li>
+                        </ul>
+                    </li> 
+                </ul> 
                 {% endif %}
             </form>
             </div>
