@@ -21,3 +21,6 @@
 a.edit, a.delete {
     display: none;
 }
+.nav-blue{
+    color:blue;
+}
