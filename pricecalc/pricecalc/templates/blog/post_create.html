@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title%} Create new post {% endblock %}
+
+{% block content %} 
+   
+   
+    <form action="{% url 'postcreate'  %}" method="POST">
+        {%csrf_token%}
+        {% for field in form %}
+        <div class="form-group">
+            {% if field.errors %}
+            `<div class="alert alert-danger">
+                {{field.errors}}
+            </div>
+            {% endif %}
+            {{field.label}}
+            {{field}}
+        </div>
+        {%endfor%}
+        
+<br>
+        <button type="submit" class="btn btn-primary">Create post</button>
+    </form>
+{% endblock %}

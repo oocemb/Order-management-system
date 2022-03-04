@@ -68,7 +68,6 @@ class Calculation(models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     price_title = models.CharField('price_title', max_length = 50)
     price_date = models.DateTimeField('price_date')
-    tags = models.ManyToManyField('Tag', blank=True, related_name='calculs') # если не писать пост будет calculation_set
 
 
 class SpecificationDetail(models.Model):
@@ -80,63 +79,6 @@ class Detail(models.Model):
     det_heigth = models.IntegerField('det_higth')
     det_widht = models.IntegerField('det_widht')
     det_material = models.TextField('det_material')
-
-
-class Tag(models.Model):
-    title = models.CharField(max_length = 50)
-    slug =  models.SlugField(max_length = 50, unique=True)
-
-    class Meta:
-        ordering = ['title']
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse('tagdetail', kwargs={'slug': self.slug})
-
-    def get_update_url(self):
-        return reverse('tagupdate', kwargs={'slug': self.slug})
-    
-    def get_delete_url(self):
-        return reverse('tagdelete', kwargs={'slug': self.slug})
-    
-    def get_create_url(self):
-        return reverse('tagcreate')
-
-def gen_slug(s):
-    new_slug = slugify(s, allow_unicode=True)
-    return (new_slug + '-' + str(int(time())))
-
-class Post(models.Model):
-    title = models.CharField(max_length=150, db_index=True)
-    slug = models.SlugField(max_length=150, blank=True)
-    body = models.TextField(blank=True, db_index=True)
-    tags = models.ManyToManyField('Tag', blank=True, related_name='posts')
-    date_pub = models.DateTimeField(auto_now_add=True)
-
-    def get_absolute_url(self):
-        return reverse('postdetail', kwargs={'slug': self.slug})
-
-    def get_update_url(self):
-        return reverse('postupdate', kwargs={'slug': self.slug})   # почемуто у меня не работало?
-    
-    def get_delete_url(self):
-        return reverse('postdelete', kwargs={'slug': self.slug})
-
-    def get_create_url(self):
-        return reverse('postcreate')
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug = gen_slug(self.title)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
-    
-    class Meta:
-        ordering = ['-date_pub']
         
 
 

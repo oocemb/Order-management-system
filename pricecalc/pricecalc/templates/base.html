@@ -29,7 +29,7 @@
                     <a class="nav-link" href="{% url 'index_calc' %}">Calc</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="http://127.0.0.1:8000/admin">Admin</a>
+                    <a class="nav-link" href="http://127.0.0.1:8002/admin">Admin</a>
                 </li>
             </ul>
             <form class="d-flex" action="{%url 'posts_list' %}">
@@ -63,6 +63,7 @@
 
                 {% block content %} {% endblock %}
                 {% block main %} {% endblock %}
+                
                 {%if is_paginated %}
                 <nav aria-label="navigation blog">
                     <ul class="pagination">
