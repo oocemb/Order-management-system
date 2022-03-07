@@ -49,7 +49,7 @@ $(document).ready(function(){
                 });
                 $('#footer-table-details').html("");
                 $('#footer-table-details').append('\
-                    <th scope="col">Итого:</th>\
+                    <th scope="col">Итого корпусная часть:</th>\
                     <th scope="col"></th>\
                     <th scope="col">' + data.details_total_nmb + '</th>\
                     <th scope="col"></th>\
@@ -116,7 +116,8 @@ $(document).ready(function(){
             data: data,
             cache: false,
             success: function (data){
-                console.log('success');
+                console.log('success fur');
+                $('.form-select-furniture').val(null).trigger('change');
                 $('.body-table-furniture-in-calc').html("");
                 $.each(data.furniture, function(key, value){
                         $('.body-table-furniture-in-calc').append('\
@@ -149,12 +150,6 @@ $(document).ready(function(){
         });
     };
 
-    $(document).on('dblclick', '.furniture', function() {
-        alert( "Вызвано событие .dblclick()" );
-        var calc_id = $('#add_detail_to_calc').data("calc_id")
-        var furniture_id = $(this).data("id")
-        furnitureListUpdate(furniture_id, 1, calc_id, false)
-    });
 
     $(document).on('click', '.delete-item-furniture', function(e){
         // Удаляет выбранную по ID деталь из расчёта
@@ -166,4 +161,21 @@ $(document).ready(function(){
 
     });
     
+
+    $('.form-select-furniture').select2({
+        width: '100%',
+        placeholder: "Выберите фурнитуру",
+        language: "ru"
+    });
+    
+    $('.form-select-furniture').change(function(e){
+        // alert( "Вызвано событие .dblclick()" );
+        if ($(this).val() !== null){
+            var calc_id = $('#add_detail_to_calc').data("calc_id")
+            var furniture_id = $('.form-select-furniture option:selected').data("id")
+            // console.log(calc_id, furniture_id)
+            furnitureListUpdate(furniture_id, 1, calc_id, false)
+        }    
+    });
+
 });

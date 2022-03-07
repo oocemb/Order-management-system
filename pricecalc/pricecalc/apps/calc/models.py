@@ -1,4 +1,5 @@
 import datetime
+from turtle import title
 from django.db import models
 from django.utils import timezone
 from social_django.models import UserSocialAuth
@@ -13,10 +14,9 @@ class CalcTag(models.Model):
         return self.title
 
 class Calc(models.Model):
-    user = models.ForeignKey(UserSocialAuth, blank=True, null=True, default=None, on_delete=models.DO_NOTHING)
     designer = models.ForeignKey(User, blank=True, null=True, default=None, on_delete=models.DO_NOTHING)
     tags = models.ForeignKey(CalcTag, blank=True, null=True, default=None, on_delete=models.DO_NOTHING)
-    title = models.CharField('название калькулятора', max_length = 30) # ~200
+    title = models.CharField('Название расчёта', max_length = 64) # ~200
     create_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -83,12 +83,16 @@ class FurnitureInCalc(models.Model):
     total_price = models.DecimalField(decimal_places=2,max_digits=8)
 
     def save(self, *args, **kwargs) -> None:
-        self.title = self.furniture.title
-        self.article = self.furniture.article
-        self.price = self.furniture.price
-        self.availability = self.furniture.availability
+        title = self.furniture.title
+        self.title = title
+        art = self.furniture.article
+        self.article = art
+        prc = self.furniture.price
+        self.price = prc
+        ava = self.furniture.availability
+        self.availability = ava
         self.total_price = self.nmb * float(self.price)
-        super().save(*args, **kwargs)
+        super(FurnitureInCalc, self).save(*args, **kwargs)
 
 
 class Box(models.Model):

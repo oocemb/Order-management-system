@@ -48,17 +48,79 @@
     {% comment %} Ajax итого {% endcomment %}
     </tfoot>
     </table>
-
+    <h2 class="mt-4 mb-4">Список фурнитуры</h2>
     <form action="{% url 'adding_furniture' %}" id="form-adding-furniture"> {%csrf_token%}
     </form>
-    <select class="form-select mt-5 mb-4" size="10" multiple aria-label="multiple select example">
-        {% for furniture in furniture_list %}
-            <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:50 }}</option>
-        {% endfor %}
-    </select>
+    <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            Сушки
+        </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+            <select class="js-select2" name="city" placeholder="Выберите город">
+                <option value=""></option>
+                <option value="367">Абаза</option>
+                <option value="340">Абакан</option>	
+                <option value="369">Абдулино</option>	
+                <option value="370">Абинск</option>	
+                <option value="371">Агидель</option>	
+            </select>
+            
+            <script>
+            $(document).ready(function() {
+                $('.js-select2').select2({
+                    placeholder: "Выберите город",
+                    maximumSelectionLength: 2,
+                    language: "ru"
+                });
+            });
+            </script>
+        </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            Мойки
+        </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+            <select class="form-select-furniture">
+            {% for furniture in furniture_list %}
+                <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:80 }} - {{ furniture.article }} -
+                {{ furniture.price }} - {{ furniture.availability }} </option>
+            {% endfor %}
+            </select>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Столешницы
+        </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+            <select class="form-select-furniture" size="10" aria-label="select example">
+            {% for furniture in furniture_list %}
+                <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:80 }} - {{ furniture.article }} -
+                {{ furniture.price }} - {{ furniture.availability }} </option>
+            {% endfor %}
+            </select>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
 
     {% comment %} Таблица деталей к конкретному расчёту {% endcomment %}
-    <table class="table caption-top table-hover">
+    <table class="table caption-top table-hover mt-4 mb-4">
     <caption>{{calc.title}}</caption>
     <thead class="table-secondary">
         <tr>
@@ -78,6 +140,8 @@
     {% comment %} Ajax итого {% endcomment %}
     </tfoot>
     </table>
+
+    
 
     {% if latest_comment %}
         {% for c in latest_comment %}

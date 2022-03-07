@@ -9,6 +9,21 @@ from .crawler import multiproc
 
 
 
+def adding_calc(request):
+    
+    if request.POST:
+        form = CalcForm(request.POST)
+        if form.is_valid():
+            obj = Calc.objects.create(designer=request.user, title=form.cleaned_data["title"],
+            tags=form.cleaned_data["tags"])
+            obj.save()
+            return HttpResponseRedirect(reverse('details_list', args = (obj.id,)))
+        return render(request, 'calc/adding_calc.html', locals())  
+    else:
+        form = CalcForm()
+        return render(request, 'calc/adding_calc.html', locals())
+
+
 
 def calc_list(request):
     """ Показывает список текущих расчётов
@@ -78,8 +93,8 @@ def crud_details_in_calc(request):
     """Создание или удаление в случае флага is_delete деталей в расчёте
     """
     data = request.POST
-    calc_id = data.get("calc_id")
     detail_id = data.get("detail_id")
+    calc_id = data.get("calc_id")
     is_delete = data.get("is_delete")
     heigth = data.get("heigth")
     width = data.get("width")
@@ -99,10 +114,12 @@ def crud_furniture_in_calc(request):
     """Создание или удаление в случае флага is_delete деталей в расчёте
     """
     data = request.POST
-    calc_id = data.get("calc_id")
+    
     furniture_id = data.get("furniture_id")
+    calc_id = data.get("calc_id")
     is_delete = data.get("is_delete")
     nmb = int(data.get("nmb"))
+    print(nmb)
     if is_delete == "true":
         obj = FurnitureInCalc.objects.get(calc_id=calc_id, id=furniture_id)
         obj.delete() 
