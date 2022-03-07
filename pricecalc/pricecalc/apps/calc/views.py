@@ -77,6 +77,7 @@ def current_furniture_in_calc_and_main_calc_info(calc_id) -> dict:
 
     for item in furniture_in_calc:
         furniture_dict = dict()
+        furniture_dict["furniture_id"] = item.furniture.id
         furniture_dict["id"] = item.id
         furniture_dict["title"] = item.title
         furniture_dict["availability"] = item.availability
@@ -104,9 +105,15 @@ def crud_details_in_calc(request):
         obj = Detail.objects.get(id=detail_id)
         obj.delete() 
     elif nmb > 0:
-        new_detail = Detail.objects.create(calc_id=calc_id, heigth=heigth
-        , width=width, nmb=nmb, price_material=price_material) 
-        new_detail.save(force_update=True)
+        if int(detail_id) == 0:
+            new_detail = Detail.objects.create(calc_id=calc_id, heigth=heigth
+            , width=width, nmb=nmb, price_material=price_material) 
+            new_detail.save(force_update=True)
+        else:
+            new_obj = Detail.objects.get(id=detail_id)
+            new_obj.nmb = int(nmb)
+            new_obj.save(force_update=True)
+        
 
 
 
@@ -119,13 +126,16 @@ def crud_furniture_in_calc(request):
     calc_id = data.get("calc_id")
     is_delete = data.get("is_delete")
     nmb = int(data.get("nmb"))
-    print(nmb)
     if is_delete == "true":
         obj = FurnitureInCalc.objects.get(calc_id=calc_id, id=furniture_id)
         obj.delete() 
     elif nmb > 0:
-        new_obj = FurnitureInCalc.objects.create(calc_id=calc_id, furniture_id=furniture_id, nmb=nmb) 
-        new_obj.save(force_update=True)
+        new_obj, created = FurnitureInCalc.objects.get_or_create(calc_id=calc_id
+        , furniture_id=furniture_id, defaults={"nmb":nmb}) 
+        if not created:
+            new_obj.nmb = int(nmb)
+            new_obj.save(force_update=True)
+
 
 
 def adding_detail(request):

@@ -40,7 +40,9 @@ $(document).ready(function(){
                         <tr>\
                             <td class="col-lg-2">' + value.heigth + '</td>\
                             <td class="col-lg-2">' + value.width + '</td>\
-                            <td class="col-lg-2">' + value.nmb + '</td>\
+                            <td class="col-lg-2"><input type="number"\
+                            class="nmb-detail" data-detail_id="' + value.id + '"\
+                            value="' + value.nmb + '"</input></td>\
                             <td class="col-lg-2">' + value.price_material + '</td>\
                             <td class="col-lg-3 table-success text-center">' + value.total_price + '</td>\
                             <td class="delete-item col-lg-1 table-danger text-center" \
@@ -83,6 +85,15 @@ $(document).ready(function(){
     detailListUpdate(0,0,0,0,calc_id,0,false)
     furnitureListUpdate(0,0,calc_id,false)
 
+    $(document).on('change', '.nmb-detail', function(e){
+        e.preventDefault()
+        var calc_id = $('#add_detail_to_calc').data("calc_id")
+        var detail_id = $(this).data("detail_id")
+        var nmb = $(this).val()
+        // console.log(calc_id, furniture_id)
+
+        detailListUpdate(0, 0, nmb, 0, calc_id, detail_id, false)
+    })
 
     $(document).on('click', '.delete-item', function(e){
         // Удаляет выбранную по ID деталь из расчёта
@@ -122,12 +133,14 @@ $(document).ready(function(){
                 $.each(data.furniture, function(key, value){
                         $('.body-table-furniture-in-calc').append('\
                         <tr>\
-                            <td class="col-lg-2">' + value.title + '</td>\
-                            <td class="col-lg-2">' + value.article + '</td>\
-                            <td class="col-lg-2">' + value.availability + '</td>\
-                            <td class="col-lg-2">' + value.price + '</td>\
-                            <td class="col-lg-2">' + value.nmb + '</td>\
-                            <td class="col-lg-3 table-success text-center">' + value.total_price + '</td>\
+                            <td class="col-lg-5">' + value.title + '</td>\
+                            <td class="col-lg-1">' + value.article + '</td>\
+                            <td class="col-lg-1">' + value.availability + '</td>\
+                            <td class="col-lg-1">' + value.price + '</td>\
+                            <td class="col-lg-1"><input type="number"\
+                            class="nmb-furniture" data-id="' + value.furniture_id + '"\
+                            value="' + value.nmb + '"</input></td>\
+                            <td class="col-lg-2 table-success text-center">' + value.total_price + '</td>\
                             <td class="delete-item-furniture col-lg-1 table-danger text-center" \
                              data-id="' + value.id + '">Удалить&#10006;</td>\
                         </tr>');
@@ -170,12 +183,22 @@ $(document).ready(function(){
     
     $('.form-select-furniture').change(function(e){
         // alert( "Вызвано событие .dblclick()" );
+        e.preventDefault()
         if ($(this).val() !== null){
             var calc_id = $('#add_detail_to_calc').data("calc_id")
             var furniture_id = $('.form-select-furniture option:selected').data("id")
-            // console.log(calc_id, furniture_id)
+            console.log(calc_id, furniture_id)
             furnitureListUpdate(furniture_id, 1, calc_id, false)
         }    
     });
+    $(document).on('change', '.nmb-furniture', function(e){
+        e.preventDefault()
+        var calc_id = $('#add_detail_to_calc').data("calc_id")
+        var furniture_id = $(this).data("id")
+        var nmb = $(this).val()
+        console.log(calc_id, furniture_id)
+
+        furnitureListUpdate(furniture_id, nmb, calc_id, false)
+    })
 
 });
