@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title%} {% endblock %}
+{% block title%} Calc list {% endblock %}
 
-{% block content %} 
+{% block main %} 
   <div class="jumbotron">
   
   {% if user.is_authenticated %}
-      
-      <p>Logged as {{ user.username }}</p>
+      <p> Доброго времени суток {{ user.username }}</p>
       <a class="btn btn-primary" href="{% url 'logout' %}?next={{request.path}}">Logout</a>
       <a class="btn btn-light" href="{% url 'password_change' %}">Password change</a>
       <h2 class="mt-3">Расчёты:</h2>

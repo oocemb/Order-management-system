@@ -2,11 +2,11 @@
 
 {% block title%} {{tag.title}} - {{block.super}} {% endblock %}
 
-{% block content %} 
+{% block main %} 
 
     <h2 class="mb-5">Posts with: {{tag.title|title}}</h2>
         {% for post in tag.posts.all %}
-        {%include 'calc/includes/post_card_templ.html'%}  
+        {%include 'blog/includes/post_card_templ.html'%}  
         {% endfor %}     
 
 {% endblock %}

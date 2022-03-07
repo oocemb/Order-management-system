@@ -83,7 +83,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('det_heigth', models.IntegerField(verbose_name='det_higth')),
-                ('det_widht', models.IntegerField(verbose_name='det_widht')),
+                ('det_width', models.IntegerField(verbose_name='det_width')),
                 ('det_material', models.TextField(verbose_name='det_material')),
                 ('specdetail', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='calc.specificationdetail')),
             ],

@@ -3,8 +3,10 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 
 
 
-def redirect_blog(request):
-    return redirect('posts_list', permanent=True)  # постоянный редиркект , бывает временный 
+def redirect_main(request):
+    """ Перенаправляет на основную страницу
+    """
+    return redirect('calc_list', permanent=True)  # постоянный редиркект , бывает временный 
 
 
 

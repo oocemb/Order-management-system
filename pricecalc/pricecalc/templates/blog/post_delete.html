@@ -2,7 +2,7 @@
 
 {% block title%} Delete post {{post.title}} {% endblock %}
 
-{% block content %} 
+{% block main %} 
     <form action="{% url 'postdelete' slug=post.slug %}" method="POST">
         {%csrf_token%}
         <h2>Are you sure, you want to delete <b>"{{post.title|title}}"</b> post?</h2>

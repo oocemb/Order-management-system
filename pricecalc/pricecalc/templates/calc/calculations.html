@@ -2,10 +2,10 @@
 
 {% block title%} Current calculations {% endblock %}
 
-{% block content %} 
+{% block main %} 
     {% if calculationlist %}
         {% for calcul in calculationlist %}
-            <a href="{% url 'calc:detail' user.id %}">{{calcul.price_title}}</a>
+            <a href="{% url 'detail' user.id %}">{{calcul.price_title}}</a>
             <p></p>
         {% endfor %}     
     {% else %}
@@ -14,7 +14,7 @@
     
 <br>
 <br>
-<form action="{% url 'calc:add_calculation' user.id %}" method="POST">
+<form action="{% url 'add_calculation' user.id %}" method="POST">
     {%csrf_token%}
     <input type="text" required placeholder="Имя расчёта" name="name"><br>
     </textarea><br>

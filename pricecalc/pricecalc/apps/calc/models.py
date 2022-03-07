@@ -1,85 +1,112 @@
-from pyexpat import model
-import re
-from statistics import mode
-from tabnanny import verbose
-from time import time
-from django.db import models
 import datetime
+from django.db import models
 from django.utils import timezone
-from django.urls import reverse
-from django.utils.text import slugify
+from social_django.models import UserSocialAuth
+from django.contrib.auth.models import User
 
-class Calc(models.Model):
-    calc_title = models.CharField('название калькулятора', max_length = 30) # ~200
-    calc_text = models.TextField('текст кальк') # 20-30k ~
-    calc_date = models.DateTimeField('дата рассчёта')
 
-    class Meta:
-        verbose_name = 'Калькуль'
-        verbose_name_plural = 'Калькули'
+
+class CalcTag(models.Model):
+    title = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.calc_title
+        return self.title
+
+class Calc(models.Model):
+    user = models.ForeignKey(UserSocialAuth, blank=True, null=True, default=None, on_delete=models.DO_NOTHING)
+    designer = models.ForeignKey(User, blank=True, null=True, default=None, on_delete=models.DO_NOTHING)
+    tags = models.ForeignKey(CalcTag, blank=True, null=True, default=None, on_delete=models.DO_NOTHING)
+    title = models.CharField('название калькулятора', max_length = 30) # ~200
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Расчёт'
+        verbose_name_plural = 'Расчёты'
+
+    def __str__(self):
+        return self.title
 
     def was_calc_recently(self):
-        return self.calc_date >= (timezone.now() - datetime.timedelta(day=7))
+        return self.create_at >= (timezone.now() - datetime.timedelta(day=7))
 
-        #a = Calc.object.get(id = 1)
-        #a.comment.set_all() # вернёт все коменты
-        #a.comment.set_create(author_name = 'Diz1', comment_text = 'wtf kuhen')
-        #a.comment.set_create(author_name = 'Diz21', comment_text = 'wtf ku11hen')
-        #a.comment.set_create(author_name = 'Diz13', comment_text = 'wtf kuhe33n')
-        #a.comment.set.count() # ---> 3
-        #a.comment.set.filter(....) 
-        #cs = a.comment.set.filter(....) 
-        #cs.delete()  # после присваивания удаляет эти коменты по фильтру уже из исходной таблицы
 
-        #calc.object.filter(calc_title__startswith = 'Кухня') вернёт все статьи с началом тайтла кухня
-        #calc.object.filter(calc_date__year = (current_year = timezone.now().year)) вернёт все статьи текущего года
+class Detail(models.Model):
+    calc = models.ForeignKey(Calc, on_delete= models.CASCADE)
+    heigth = models.PositiveIntegerField('Высота')
+    width = models.PositiveIntegerField('Ширина')
+    nmb = models.PositiveIntegerField('Количество')
+    price_material = models.PositiveIntegerField('Цена м2')
+    total_price = models.DecimalField('Стоимость', decimal_places=2, max_digits=10, default=0)
+        
+    def __str__(self):
+        return '{} - {}x{}-{}'.format(self.calc, self.heigth, self.width, self.nmb)
+
+    def save(self, *args,**kwargs): # т.к. в сантиметрах делим на 10000
+        self.total_price = int(self.nmb) * int(self.heigth) * int(self.width) * int(self.price_material) / 10000
+        super(Detail, self).save(*args,**kwargs)
+
+
+        
+
 
 class Comment(models.Model): # в единственном числе названия классов
     calc = models.ForeignKey(Calc, on_delete= models.CASCADE)
-    author_name = models.CharField('name avtor', max_length = 50)
-    comment_text = models.CharField('текст комм', max_length = 50)
+    name = models.CharField('name avtor', max_length = 50)
+    text = models.CharField('текст комм', max_length = 50)
 
     def __str__(self):
         return self.author_name
 
     class Meta:
-        verbose_name = 'комент'
-        verbose_name_plural = 'коменты'
+        verbose_name = 'Коментарий'
+        verbose_name_plural = 'Коментарии'
 
-class User(models.Model):
-    user_name = models.CharField('user_name', max_length = 50)
-
-    def get_absolute_url(self):
-        return reverse('calc:calculation', kwargs = {'user_id': self.id})
 
 
 class Furniture(models.Model):
-    pass
+    title = models.CharField(max_length=100, default=None)
+    article = models.CharField(max_length=50, default=None)
+    price = models.DecimalField(decimal_places=2, max_digits=8, default=None)
+    availability = models.CharField(max_length=20, default=None)
+
+    def __str__(self) -> str:
+        return self.title[:30]
+
+class FurnitureInCalc(models.Model):
+    calc = models.ForeignKey(Calc, on_delete=models.CASCADE)
+    furniture = models.ForeignKey(Furniture, null=True, on_delete=models.SET_NULL)
+    title = models.CharField(max_length=100)
+    article = models.CharField(max_length=50)
+    price = models.DecimalField(decimal_places=2,max_digits=8)
+    availability = models.CharField(max_length=20)
+    nmb = models.PositiveIntegerField()
+    total_price = models.DecimalField(decimal_places=2,max_digits=8)
+
+    def save(self, *args, **kwargs) -> None:
+        self.title = self.furniture.title
+        self.article = self.furniture.article
+        self.price = self.furniture.price
+        self.availability = self.furniture.availability
+        self.total_price = self.nmb * float(self.price)
+        super().save(*args, **kwargs)
 
 
 class Box(models.Model):
     pass
 
 
+
 class Calculation(models.Model):
-    user = models.ForeignKey(User, on_delete= models.CASCADE)
-    price_title = models.CharField('price_title', max_length = 50)
-    price_date = models.DateTimeField('price_date')
+    title = models.CharField('price_title', max_length = 50)
+    date = models.DateTimeField('price_date')
+
 
 
 class SpecificationDetail(models.Model):
     calculation = models.ForeignKey(Calculation, on_delete= models.CASCADE)
 
 
-class Detail(models.Model):
-    specdetail = models.ForeignKey(SpecificationDetail, on_delete= models.CASCADE)
-    det_heigth = models.IntegerField('det_higth')
-    det_widht = models.IntegerField('det_widht')
-    det_material = models.TextField('det_material')
-        
+
 
 
 #class Team(models.Model):
@@ -87,3 +114,17 @@ class Detail(models.Model):
 #    TEAM_LVL = ( '10', '9', '8')
 #    #TEAM_LVL = ( ('U9', 'Under 09s'), ('U10', 'Under 10s'))
 #    team_level = models.CharField(max_length=10, choices=TEAM_LVL, default='10')
+
+
+#a = Calc.object.get(id = 1)
+        #a.comment.set_all() # вернёт все коменты
+        #a.comment.set_create(name = 'Diz1', comment_text = 'wtf kuhen')
+        #a.comment.set_create(name = 'Diz21', comment_text = 'wtf ku11hen')
+        #a.comment.set_create(name = 'Diz13', comment_text = 'wtf kuhe33n')
+        #a.comment.set.count() # ---> 3
+        #a.comment.set.filter(....) 
+        #cs = a.comment.set.filter(....) 
+        #cs.delete()  # после присваивания удаляет эти коменты по фильтру уже из исходной таблицы
+
+        #calc.object.filter(title__startswith = 'Кухня') вернёт все статьи с началом тайтла кухня
+        #calc.object.filter(create_at__year = (current_year = timezone.now().year)) вернёт все статьи текущего года

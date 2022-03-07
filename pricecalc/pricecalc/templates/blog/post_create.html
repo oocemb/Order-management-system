@@ -2,7 +2,7 @@
 
 {% block title%} Create new post {% endblock %}
 
-{% block content %} 
+{% block main %} 
    
    
     <form action="{% url 'postcreate'  %}" method="POST">
@@ -15,6 +15,7 @@
             </div>
             {% endif %}
             {{field.label}}
+            <br>
             {{field}}
         </div>
         {%endfor%}

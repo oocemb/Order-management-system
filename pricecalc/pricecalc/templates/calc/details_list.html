@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title%} {{calc.title}} {{calc.id}} {% endblock %}
+
+{% block main %}
+    {% comment %} Форма добавления новой детали {% endcomment %}
+    <div class="row mb-4">
+        <h5 class="col-lg-5">Добавить новую деталь (cm!!!)</h5>
+        <label class="col-lg-4 text-right">Значание по умолчанию м2: </label>
+        <input class="col-lg-2" type="number" id="m2-default" onkeyup="copyValueTo(this, 'm2')" value="1600">
+    </div>
+    <form action="{% url 'adding_detail' %}" id="form-adding-details"> {%csrf_token%}
+    <div class="form-group">
+            <label>Высота: </label>
+            <input type="number" id="heigth" required class="form-inline">
+
+            <label>Ширина: </label>
+            <input type="number" id="width" required class="form-inline">
+
+            <label>Кол-во: </label>
+            <input type="number" id="nmb" required class="form-inline">
+
+            <label>Цена м2: </label>
+            <input type="number" id="m2" required class="form-inline">
+    </div>
+            <button role="button" class="btn btn-primary mt-3" id="add_detail_to_calc"
+            data-calc_id="{{calc.id}}" type="submit">Добавить</button>
+    </form>
+
+    {% comment %} Таблица деталей к конкретному расчёту {% endcomment %}
+    <table class="table caption-top table-hover">
+    <caption>{{calc.title}}</caption>
+    <thead class="table-secondary">
+        <tr>
+        <th scope="col">Высота</th>
+        <th scope="col">Ширина</th>
+        <th scope="col">Кол-во</th>
+        <th scope="col">Цена м2</th>
+        <th scope="col" class="text-center">Стоимость</th>
+        <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody class="body-table-details-in-calc">
+
+    {% comment %} Ajax работа с списком деталей {% endcomment %}
+    </tbody>
+    <tfoot id="footer-table-details">
+    {% comment %} Ajax итого {% endcomment %}
+    </tfoot>
+    </table>
+
+    <form action="{% url 'adding_furniture' %}" id="form-adding-furniture"> {%csrf_token%}
+    </form>
+    <select class="form-select mt-5 mb-4" size="10" multiple aria-label="multiple select example">
+        {% for furniture in furniture_list %}
+            <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:50 }}</option>
+        {% endfor %}
+    </select>
+
+    {% comment %} Таблица деталей к конкретному расчёту {% endcomment %}
+    <table class="table caption-top table-hover">
+    <caption>{{calc.title}}</caption>
+    <thead class="table-secondary">
+        <tr>
+        <th scope="col">Название</th>
+        <th scope="col">Артикул</th>
+        <th scope="col">Наличие</th>
+        <th scope="col">Цена</th>
+        <th scope="col">Кол-во</th>
+        <th scope="col" class="text-center">Стоимость</th>
+        <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody class="body-table-furniture-in-calc">
+    {% comment %} Ajax работа с списком фурнитуры {% endcomment %}
+    </tbody>
+    <tfoot id="footer-table-furniture">
+    {% comment %} Ajax итого {% endcomment %}
+    </tfoot>
+    </table>
+
+    {% if latest_comment %}
+        {% for c in latest_comment %}
+            <p>
+                <strong>{{c.author_name}}</strong>
+                <p>{{c.comment_text}}</p>
+            </p>
+        {% endfor %}
+    {%else%}
+        коменты не найдены
+    {% endif %}
+    <hr>
+
+    <form action="{% url 'comment' calc_id %}" method="POST">
+        {%csrf_token%}
+        <input type="text" required placeholder="Your name" name="name"><br>
+        <textarea name="text" required="" placeholder="Text comment" cols="30" rows="10">
+        </textarea><br>
+        <button type="submit">Comment now</button>
+    </form>
+{% endblock %}

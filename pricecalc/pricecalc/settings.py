@@ -29,9 +29,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'calc',
-    'myauth',
     'blog',
-    
+
+    # 'import_export',
     'crispy_forms',
     'social_django',
 ]
@@ -41,21 +41,11 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.vk.VKOAuth2',
-    # 'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'social_core.backends.facebook.FacebookAppOAuth2',
     'social_core.backends.facebook.FacebookOAuth2',
 
 )
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-#         'rest_framework_social_oauth2.authentication.SocialAuthentication',
-#     ),
-    # 'DEFAULT_FILTER_BACKENDS': (
-    #     'django_filters.rest_framework.DjangoFilterBackend',
-    # ),
-# }
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('GOOGLE_OAUTH2_SECRET')
@@ -65,10 +55,10 @@ SOCIAL_AUTH_FACEBOOK_KEY = env('FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = env('FACEBOOK_SECRET')
 
 # LOGIN_URL = '/auth/login/google-oauth2/'
-# SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
 # SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
 SOCIAL_AUTH_VK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, name, email',
@@ -161,6 +151,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]

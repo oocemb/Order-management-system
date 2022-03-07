@@ -2,11 +2,11 @@
 
 {% block title%} Posts - {{block.super}} {% endblock %}
 
-{% block content %} 
+{% block main %} 
     <h2 class="mb-5">Posts:</h2>
     {% if posts %}
         {% for post in posts.object_list %}
-            {%include 'calc/includes/post_card_templ.html'%}
+            {%include 'blog/includes/post_card_templ.html'%}
         {% endfor %}     
     {% else %}
         <h3>No posts</h3>
