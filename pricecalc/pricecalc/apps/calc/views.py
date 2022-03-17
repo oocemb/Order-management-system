@@ -5,8 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .utils import *
 from .forms import *
-from .crawler import multiproc
-
+from .tasks import update_data_furniture
 
 
 def adding_calc(request):
@@ -38,7 +37,7 @@ def calc_list(request):
 
 
 def update_data(request):
-    multiproc(1)
+    update_data_furniture.delay()
     return HttpResponseRedirect(reverse('calc_list'))
 
 

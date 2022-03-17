@@ -66,7 +66,6 @@ def save_file(items, path):
 def multiproc(page):
     html = get_html(URL, params={'PAGEN_1':page})
     data = get_all_data(html)
-    # save
     Furniture.objects.bulk_create(data)
 
 def main():
