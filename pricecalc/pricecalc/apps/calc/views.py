@@ -7,6 +7,8 @@ from .utils import *
 from .forms import *
 from .tasks import update_data_furniture
 
+from .crawler import handle_parsing_data, multiprocessing_parsing
+
 
 def adding_calc(request):
     
@@ -67,6 +69,9 @@ def current_details_in_calc_and_main_calc_info(calc_id) -> dict:
 def current_furniture_in_calc_and_main_calc_info(calc_id) -> dict:
     """Составляет словарь из информации о текущих делалях в расчёте 
     и информации о их количестве и общей стоимости
+    TODO: Если удалять фурнитуру из базы данных, то они удаляются из рассчёта!!! 
+    ForeingKey ставит (furniture_id = Null), ошибка и количество не меняется
+    Может это и правильно если фурнитура удалена?
     """
     return_dict = dict()
     furniture_in_calc = FurnitureInCalc.objects.filter(calc=calc_id)     
@@ -76,13 +81,16 @@ def current_furniture_in_calc_and_main_calc_info(calc_id) -> dict:
 
     for item in furniture_in_calc:
         furniture_dict = dict()
-        furniture_dict["furniture_id"] = item.furniture.id
+        if item.furniture is not None:
+            furniture_dict["furniture_id"] = item.furniture.id
+        else:
+            furniture_dict["furniture_id"] = 0
         furniture_dict["id"] = item.id
         furniture_dict["title"] = item.title
         furniture_dict["availability"] = item.availability
         furniture_dict["nmb"] = item.nmb
         furniture_dict["article"] = item.article
-        furniture_dict["price"] = item.price
+        furniture_dict["price"] = item.price_retail
         furniture_dict["total_price"] = item.total_price
         return_dict["furniture"].append(furniture_dict)
     
@@ -159,6 +167,7 @@ def details_list(request, calc_id):
     form = DetailForm
 
     furniture_list = Furniture.objects.all()
+    handles_list = Handle.objects.all()
     latest_comment = Comment.objects.filter(calc=calc_id).order_by('-id')[:10]
     
     return render(request, 'calc/details_list.html', locals())

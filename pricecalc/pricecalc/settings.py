@@ -17,8 +17,9 @@ SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1'] # хосты которые обслуживает сайт / потом после хостинга my_site.com(для защиты)
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
 
+ALLOWED_HOSTS = ['localhost','127.0.0.1'] # хосты которые обслуживает сайт / потом после хостинга my_site.com(для защиты)
 
 INSTALLED_APPS = [
     'django.contrib.admin',

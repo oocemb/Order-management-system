@@ -41,3 +41,19 @@ def default_or_search_posts(request, object):
         return posts, POST_PER_PAGE
     else:
         return object.objects.all(), POST_PER_PAGE
+
+
+def calculate_furniture_price(price):
+    """Расчитывает цену фурнитуры по заданной формуле."""
+    MULTIPLIER = 1.5
+    MULTIPLIER_MAX = 1.4
+    COEFFICIENT_MIN = 100
+    COEFFICIENT = 500
+    MAX_PRICE = 10000
+    MIN_PRICE = 200
+    if price < MIN_PRICE:
+        return price * MULTIPLIER + COEFFICIENT_MIN
+    elif price > MAX_PRICE:
+        return price * MULTIPLIER_MAX
+    else:
+        return price * MULTIPLIER + COEFFICIENT

@@ -1,10 +1,10 @@
 import datetime
-from turtle import title
 from django.db import models
 from django.utils import timezone
-from social_django.models import UserSocialAuth
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
+from pricecalc.apps.base.services import calculate_furniture_price
 
 
 class CalcTag(models.Model):
@@ -62,15 +62,47 @@ class Comment(models.Model): # в единственном числе назва
         verbose_name_plural = 'Коментарии'
 
 
+class CategoryFurniture(models.Model):
+    title = models.CharField(max_length=100, default=None)
+
+    class Meta:
+        verbose_name = 'Категория фурнитуры'
+        verbose_name_plural = 'Категории фурнитуры'
+
+    def __str__(self) -> str:
+        return self.title
+
 
 class Furniture(models.Model):
+    category = models.ForeignKey(CategoryFurniture, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=100, default=None)
     article = models.CharField(max_length=50, default=None)
     price = models.DecimalField(decimal_places=2, max_digits=8, default=None)
+    price_retail = models.DecimalField(decimal_places=2, max_digits=8, blank=True, null=True)
     availability = models.CharField(max_length=20, default=None)
 
+    class Meta:
+        verbose_name = 'Фурнитура'
+        verbose_name_plural = 'Фурнитура'
+
     def __str__(self) -> str:
-        return self.title[:30]
+        return '%s - %s - %s' %(self.title[:50], self.price, self.price_retail)
+
+
+class Handle(models.Model):
+    title = models.CharField(max_length=100, default=None)
+    article = models.CharField(max_length=50, default=None)
+    price = models.DecimalField(decimal_places=2, max_digits=8, default=None)
+    price_retail = models.DecimalField(decimal_places=2, max_digits=8, blank=True, null=True)
+    availability = models.CharField(max_length=20, default=None)
+
+    class Meta:
+        verbose_name = 'Ручка'
+        verbose_name_plural = 'Ручки'
+
+    def __str__(self) -> str:
+        return '%s - %s - %s' %(self.title[:50], self.price, self.price_retail)
+
 
 class FurnitureInCalc(models.Model):
     calc = models.ForeignKey(Calc, on_delete=models.CASCADE)
@@ -78,6 +110,7 @@ class FurnitureInCalc(models.Model):
     title = models.CharField(max_length=100)
     article = models.CharField(max_length=50)
     price = models.DecimalField(decimal_places=2,max_digits=8)
+    price_retail = models.DecimalField(decimal_places=2,max_digits=8, default=1)
     availability = models.CharField(max_length=20)
     nmb = models.PositiveIntegerField()
     total_price = models.DecimalField(decimal_places=2,max_digits=8)
@@ -89,9 +122,11 @@ class FurnitureInCalc(models.Model):
         self.article = art
         prc = self.furniture.price
         self.price = prc
+        prc_retail = self.furniture.price_retail
+        self.price_retail = prc_retail
         ava = self.furniture.availability
         self.availability = ava
-        self.total_price = self.nmb * float(self.price)
+        self.total_price = self.nmb * float(self.price_retail)
         super(FurnitureInCalc, self).save(*args, **kwargs)
 
 

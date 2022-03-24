@@ -182,7 +182,7 @@ $(document).ready(function(){
     });
     
     $('.form-select-furniture').change(function(e){
-        // alert( "Вызвано событие .dblclick()" );
+
         e.preventDefault()
         if ($(this).val() !== null){
             var calc_id = $('#add_detail_to_calc').data("calc_id")
