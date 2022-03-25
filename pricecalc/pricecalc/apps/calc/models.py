@@ -2,18 +2,22 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-
-from pricecalc.apps.base.services import calculate_furniture_price
 
 
 class CalcTag(models.Model):
+    """Модель тэгов(категорий) расчётов."""
     title = models.CharField(max_length=20)
+
+    class Meta:
+        verbose_name = 'Тэг расчёта'
+        verbose_name_plural = 'Тэги расчётов'
 
     def __str__(self):
         return self.title
 
+
 class Calc(models.Model):
+    """Модель расчёта."""
     designer = models.ForeignKey(User, blank=True, null=True, default=None, on_delete=models.DO_NOTHING)
     tags = models.ForeignKey(CalcTag, blank=True, null=True, default=None, on_delete=models.DO_NOTHING)
     title = models.CharField('Название расчёта', max_length = 64) # ~200
@@ -31,38 +35,32 @@ class Calc(models.Model):
 
 
 class Detail(models.Model):
+    """Модель детали в расчёте."""
     calc = models.ForeignKey(Calc, on_delete= models.CASCADE)
     heigth = models.PositiveIntegerField('Высота')
     width = models.PositiveIntegerField('Ширина')
     nmb = models.PositiveIntegerField('Количество')
     price_material = models.PositiveIntegerField('Цена м2')
     total_price = models.DecimalField('Стоимость', decimal_places=2, max_digits=10, default=0)
-        
+
+    class Meta:
+        verbose_name = 'Деталь'
+        verbose_name_plural = 'Детали'
+
     def __str__(self):
         return '{} - {}x{}-{}'.format(self.calc, self.heigth, self.width, self.nmb)
 
-    def save(self, *args,**kwargs): # т.к. в сантиметрах делим на 10000
-        self.total_price = int(self.nmb) * int(self.heigth) * int(self.width) * int(self.price_material) / 10000
+    def save(self, *args,**kwargs):
+        # Автоматический расчёт общей стоимости при сохранении
+        self.total_price = int(self.nmb) \
+            * int(self.heigth) * int(self.width) \
+            * int(self.price_material) \
+            / 10000 # т.к. в сантиметрах делим на 10000
         super(Detail, self).save(*args,**kwargs)
 
 
-        
-
-
-class Comment(models.Model): # в единственном числе названия классов
-    calc = models.ForeignKey(Calc, on_delete= models.CASCADE)
-    name = models.CharField('name avtor', max_length = 50)
-    text = models.CharField('текст комм', max_length = 50)
-
-    def __str__(self):
-        return self.author_name
-
-    class Meta:
-        verbose_name = 'Коментарий'
-        verbose_name_plural = 'Коментарии'
-
-
 class CategoryFurniture(models.Model):
+    """Модель категории фурнитуры."""
     title = models.CharField(max_length=100, default=None)
 
     class Meta:
@@ -74,6 +72,7 @@ class CategoryFurniture(models.Model):
 
 
 class Furniture(models.Model):
+    """Модель фурнитуры."""
     category = models.ForeignKey(CategoryFurniture, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=100, default=None)
     article = models.CharField(max_length=50, default=None)
@@ -86,25 +85,11 @@ class Furniture(models.Model):
         verbose_name_plural = 'Фурнитура'
 
     def __str__(self) -> str:
-        return '%s - %s - %s' %(self.title[:50], self.price, self.price_retail)
-
-
-class Handle(models.Model):
-    title = models.CharField(max_length=100, default=None)
-    article = models.CharField(max_length=50, default=None)
-    price = models.DecimalField(decimal_places=2, max_digits=8, default=None)
-    price_retail = models.DecimalField(decimal_places=2, max_digits=8, blank=True, null=True)
-    availability = models.CharField(max_length=20, default=None)
-
-    class Meta:
-        verbose_name = 'Ручка'
-        verbose_name_plural = 'Ручки'
-
-    def __str__(self) -> str:
-        return '%s - %s - %s' %(self.title[:50], self.price, self.price_retail)
+        return '%s - %s - %s - %s' %(self.category, self.title[:50], self.price, self.price_retail)
 
 
 class FurnitureInCalc(models.Model):
+    """Модель фурнитуры в заказе."""
     calc = models.ForeignKey(Calc, on_delete=models.CASCADE)
     furniture = models.ForeignKey(Furniture, null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=100)
@@ -115,55 +100,49 @@ class FurnitureInCalc(models.Model):
     nmb = models.PositiveIntegerField()
     total_price = models.DecimalField(decimal_places=2,max_digits=8)
 
+    class Meta:
+        verbose_name = 'Фурнитура в расчёте'
+        verbose_name_plural = 'Фурнитура в расчёте'
+
+    def __str__(self) -> str:
+        return '%s - %s - %s - %s' %(self.category, self.title[:50], self.price, self.price_retail)
+
     def save(self, *args, **kwargs) -> None:
-        title = self.furniture.title
-        self.title = title
-        art = self.furniture.article
-        self.article = art
-        prc = self.furniture.price
-        self.price = prc
-        prc_retail = self.furniture.price_retail
-        self.price_retail = prc_retail
-        ava = self.furniture.availability
-        self.availability = ava
+        # Автоматический расчёт общей стоимости и параметров при добавлении
+        self.title = self.furniture.title 
+        self.article = self.furniture.article
+        self.price = self.furniture.price
+        self.price_retail = self.furniture.price_retail
+        self.availability = self.furniture.availability
         self.total_price = self.nmb * float(self.price_retail)
         super(FurnitureInCalc, self).save(*args, **kwargs)
 
 
+class Ldstp(models.Model):
+    title = models.CharField(max_length=128)
+    price = models.DecimalField(decimal_places=2, max_digits=8)
+    availability = models.CharField(max_length=32)
+
+
+class Comment(models.Model):
+    """Модель коментария к расчёту."""
+    calc = models.ForeignKey(Calc, on_delete= models.CASCADE)
+    name = models.CharField('name avtor', max_length = 50)
+    text = models.CharField('текст комм', max_length = 50)
+
+    class Meta:
+        verbose_name = 'Коментарий'
+        verbose_name_plural = 'Коментарии'
+
+    def __str__(self):
+        return self.author_name
+
+
+
 class Box(models.Model):
     pass
-
-
-
 class Calculation(models.Model):
     title = models.CharField('price_title', max_length = 50)
     date = models.DateTimeField('price_date')
-
-
-
 class SpecificationDetail(models.Model):
     calculation = models.ForeignKey(Calculation, on_delete= models.CASCADE)
-
-
-
-
-
-#class Team(models.Model):
-#    name = models.CharField(max_length=20)
-#    TEAM_LVL = ( '10', '9', '8')
-#    #TEAM_LVL = ( ('U9', 'Under 09s'), ('U10', 'Under 10s'))
-#    team_level = models.CharField(max_length=10, choices=TEAM_LVL, default='10')
-
-
-#a = Calc.object.get(id = 1)
-        #a.comment.set_all() # вернёт все коменты
-        #a.comment.set_create(name = 'Diz1', comment_text = 'wtf kuhen')
-        #a.comment.set_create(name = 'Diz21', comment_text = 'wtf ku11hen')
-        #a.comment.set_create(name = 'Diz13', comment_text = 'wtf kuhe33n')
-        #a.comment.set.count() # ---> 3
-        #a.comment.set.filter(....) 
-        #cs = a.comment.set.filter(....) 
-        #cs.delete()  # после присваивания удаляет эти коменты по фильтру уже из исходной таблицы
-
-        #calc.object.filter(title__startswith = 'Кухня') вернёт все статьи с началом тайтла кухня
-        #calc.object.filter(create_at__year = (current_year = timezone.now().year)) вернёт все статьи текущего года

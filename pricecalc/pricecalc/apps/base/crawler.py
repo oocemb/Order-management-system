@@ -2,9 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 from multiprocessing import Pool
 
-from pricecalc.apps.base.services import calculate_furniture_price
+from .services import calculate_furniture_price
 
-from .models import CategoryFurniture, Furniture, Handle
+from calc.models import CategoryFurniture, Furniture
 
 URL = 'https://makmart.ru/catalog/drying/upper/'
 Header = {'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', 'accept':'*/*'}
@@ -41,7 +41,8 @@ def get_pages_count(html):
 
 
 def get_all_data_on_furniture(html, object, category):
-    """ Создаёт список элементов фурнитуры для дальнейшего обновления на конкретной странице html
+    """ Собирает все элементов фурнитуры на конкретной странице html
+    и создаёт список для дальнейшего обновления в БД
     """
     items_data_bulk_list = []
     soup = BeautifulSoup(html, 'html.parser')
@@ -50,7 +51,7 @@ def get_all_data_on_furniture(html, object, category):
         price = round(float(item.find('div', class_='price').get('data-value')),0)
         
         row_dict = {
-            'category': category,
+            'category_id': category,
             'title': item.find('div', class_='item-title').get_text(strip=True),
             'article': item.find('div', class_='article_block').get('data-value'),
             'price': price,
@@ -68,11 +69,11 @@ def add_data_in_current_page_furniture(page, object, URL, category):
     и после того все нужные списки обьеденить и разом засунуть в БД
     """
     html = get_html(URL, params={'PAGEN_1':page})
-    object_list = get_all_data_on_furniture(html, Furniture, category)
+    object_list = get_all_data_on_furniture(html, object, category)
     object.objects.bulk_create(object_list)
 
 
-def multiprocessing_parsing():
+def update_data_makmart():
     """ Контроллер цикла парсигра данных по конкретной фурнитуре
     Создаёт обьекты в базе данных
     """
@@ -80,7 +81,8 @@ def multiprocessing_parsing():
     urls = sort_required_links(get_all_links_in_catalog(html))
     category = list(urls.keys())
     urls = list(urls.values())
-    category = CategoryFurniture.objects.get(id=category[0])
+    # category = CategoryFurniture.objects.get(id=category[0])
+    category = category[0]
     urls = urls[0]
     for url in urls:
         http = get_http(url)
@@ -94,32 +96,13 @@ def multiprocessing_parsing():
             print('Error http')
 
 
-
-def handle_parsing_data():
-    """ 
-    """
-    URL = 'https://makmart.ru/catalog/handles/'
-    http = get_http(URL)
-    if http.status_code == 200:
-
-        pages_count = get_pages_count(get_html(URL))
-
-        for page in range(1, pages_count+1):
-            print(page)
-            add_data_in_current_page_furniture(page, Handle, URL)
-
-    else:
-        print('Error http')
-
-
 def get_all_links_in_catalog(html):
     """Получает список всех ссылок на пункты из каталога."""
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find('div', class_='catalog_section_list').find_all('li', class_='name')
     links_list = []
     for item in items:
-        links_list.append(item.find('a', class_='dark_link').get('href'))
-    print(links_list, len(links_list))  
+        links_list.append(item.find('a', class_='dark_link').get('href'))  
     return links_list
 
 
@@ -140,6 +123,7 @@ def sort_required_links(links_list: list) -> dict:
     _MENSOLO_AND_HANGERS_AND_LEG = [24,25,8,10] # менсоло, крючки, ножки опоры
     _WARDROBE_FURNITURE = [32,33] # гардеробная фурнитура
     _HANDLE = [36]
+    # TODO: Можно добавить сравнительный анализ категорий в БД и вставлять сюда в список ссылок правильный Id
     _USE_LIST = {
         1: _OTHER_FURNITURE, 
         2: _OTHER_KITCHEN_FURNITURE, 

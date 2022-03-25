@@ -1,13 +1,12 @@
 from http.client import HTTPException
 
 from pricecalc.celery import app
-from calc.crawler import multiprocessing_parsing, handle_parsing_data
+from pricecalc.apps.base.crawler import update_data_makmart
 
 
 @app.task
 def update_data_furniture():
-    multiprocessing_parsing()
-    # handle_parsing_data()
+    update_data_makmart()
 
 
 # @app.task

@@ -27,7 +27,7 @@
             <tr>
                 <th scope="row">{{calc.id}}</th>
                 <td>{{calc.designer}}</td>
-                <td><a href="{% url 'details_list' calc.id %}">{{calc.title}}</a></td>
+                <td><a href="{% url 'calc_details_form' calc.id %}">{{calc.title}}</a></td>
                 <td>{{calc.tags}}</td>
                 <td>{{calc.create_at}}</td>
             </tr>
@@ -43,8 +43,6 @@
     <a class="btn btn-primary" href="{% url 'login' %}?next={{request.path}}">Login</a>
     <a class="btn btn-secondary" href="{% url 'password_reset' %}">Password reset</a>
 {% endif %}
-
-
 
 <form class="update-furniture-data mt-4 mb-4" action="{% url 'update_data' %}">{% csrf_token %}
 <button type=submit class="btn btn-primary">Update data</button>
