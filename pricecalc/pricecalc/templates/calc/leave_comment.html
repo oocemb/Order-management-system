@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title%} Создать новый расчёт {% endblock %}
+{% block title%} Добавить новый комментарий {% endblock %}
 
-{% block main %} 
-    <form action="{% url 'adding_calc'  %}" method="POST">
+{% block main %}
+    <form action="{% url 'leave_comment' calc_id  %}" method="POST">
         {%csrf_token%}
         {% for field in form %}
         <div class="form-group">
@@ -16,8 +16,8 @@
             <br>
             {{field}}
         </div>
-        {%endfor%}
+        {%endfor%} 
         <br>
-        <button type="submit" class="btn btn-primary">Создать расчёт</button>
+        <button class="btn btn-primary" type="submit">Добавить комментарий</button>
     </form>
 {% endblock %}

@@ -49,6 +49,9 @@
     {% comment %} Ajax итого {% endcomment %}
     </tfoot>
     </table>
+
+    {% comment %} Список фурнитуры для выбота и добавления {% endcomment %}
+    <hr>
     <h2 class="mt-4 mb-4">Список фурнитуры</h2>
     <form action="{% url 'adding_furniture' %}" id="form-adding-furniture"> {%csrf_token%}
     </form>
@@ -69,16 +72,6 @@
                 <option value="370">Абинск</option>	
                 <option value="371">Агидель</option>	
             </select>
-            
-            {% comment %} <script>
-            $(document).ready(function() {
-                $('.js-select2').select2({
-                    placeholder: "Выберите город",
-                    maximumSelectionLength: 2,
-                    language: "ru"
-                });
-            });
-            </script> {% endcomment %}
         </div>
         </div>
     </div>
@@ -120,7 +113,7 @@
 
 
 
-    {% comment %} Таблица деталей к конкретному расчёту {% endcomment %}
+    {% comment %} Таблица фурнитуры к конкретному расчёту {% endcomment %}
     <table class="table caption-top table-hover mt-4 mb-4">
     <caption>{{calc.title}}</caption>
     <thead class="table-secondary">
@@ -142,27 +135,18 @@
     </tfoot>
     </table>
 
-    
-
+    {% comment %} Коментарии к заказу {% endcomment %}
+    <hr>
+    <h2 class="mt-4 mb-4">Коментарии</h2>
     {% if latest_comment %}
         {% for c in latest_comment %}
-            <p>
-                <strong>{{c.author_name}}</strong>
-                <p>{{c.comment_text}}</p>
-            </p>
+            <strong>{{c.name}}</strong>
+            <p>{{c.text}}</p>
         {% endfor %}
     {%else%}
-        коменты не найдены
+        Коментарии не добавлены
     {% endif %}
-    <hr>
-
-    <form action="{% url 'comment' calc_id %}" method="POST">
-        {%csrf_token%}
-        <input type="text" required placeholder="Your name" name="name"><br>
-        <textarea name="text" required="" placeholder="Text comment" cols="30" rows="10">
-        </textarea><br>
-        <button type="submit">Comment now</button>
-    </form>
+    <a type="button" class="btn btn-primary mt-2 mb-2" href="{% url 'leave_comment' calc_id %}">Добавить коментарий</a> 
 
 <script src="{% static 'scripts.js'%}"></script>
 {% endblock %}

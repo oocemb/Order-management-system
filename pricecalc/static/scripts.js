@@ -147,7 +147,7 @@ $(document).ready(function(){
                 });
                 $('#footer-table-furniture').html("");
                 $('#footer-table-furniture').append('\
-                    <th scope="col">Итого:</th>\
+                    <th scope="col">Итого фурнитурная часть:</th>\
                     <th scope="col"></th>\
                     <th scope="col"></th>\
                     <th scope="col"></th>\

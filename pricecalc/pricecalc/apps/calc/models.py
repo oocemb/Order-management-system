@@ -127,8 +127,8 @@ class Ldstp(models.Model):
 class Comment(models.Model):
     """Модель коментария к расчёту."""
     calc = models.ForeignKey(Calc, on_delete= models.CASCADE)
-    name = models.CharField('name avtor', max_length = 50)
-    text = models.CharField('текст комм', max_length = 50)
+    name = models.CharField('Тема', max_length = 50)
+    text = models.TextField('Текст коментария', max_length = 1000)
 
     class Meta:
         verbose_name = 'Коментарий'
@@ -138,11 +138,5 @@ class Comment(models.Model):
         return self.author_name
 
 
-
 class Box(models.Model):
     pass
-class Calculation(models.Model):
-    title = models.CharField('price_title', max_length = 50)
-    date = models.DateTimeField('price_date')
-class SpecificationDetail(models.Model):
-    calculation = models.ForeignKey(Calculation, on_delete= models.CASCADE)

@@ -41,9 +41,8 @@ def adding_calc(request):
 def calc_details_form(request, calc_id):
     """Форма для расчёта с взаимодействием через Ajax."""
     calc = Calc.objects.get(pk=calc_id)
-    # form = DetailForm
     furniture_list = Furniture.objects.filter(category_id = 1)
-    latest_comment = Comment.objects.filter(calc=calc_id).order_by('-id')[:10]
+    latest_comment = Comment.objects.filter(calc_id=calc_id).order_by('-id')
     return render(request, 'calc/calc_details_form.html', locals())
 
 
@@ -67,12 +66,18 @@ def update_data(request):
     return HttpResponseRedirect(reverse('calc_list'))
 
 
-def comment(request, calc_id):
-    try:
-        a = Calc.objects.get( id = calc_id )
-    except:
-        raise Http404("Not found")
-
-    a.comment_set.create(author_name = request.POST['name'], comment_text = request.POST['text'])
-    return HttpResponseRedirect(reverse('calc_details_form', args = (a.id,)))
+def leave_comment(request, calc_id):
+    if request.POST:
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            obj = Comment.objects.create(calc_id=calc_id,
+                name=form.cleaned_data["name"],
+                text=form.cleaned_data["text"])
+            obj.save()
+            return HttpResponseRedirect(reverse('calc_details_form', args = (calc_id,)))
+        print('no valid')
+        return render(request, 'calc/leave_comment.html', locals())
+    else:
+        form = CommentForm()
+        return render(request, 'calc/leave_comment.html', locals())
 

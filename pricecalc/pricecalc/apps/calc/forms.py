@@ -1,5 +1,5 @@
 from django import forms
-from .models import Detail, Calc
+from .models import Detail, Calc, Comment
 
 
 class DetailForm(forms.ModelForm):
@@ -7,6 +7,17 @@ class DetailForm(forms.ModelForm):
     class Meta:
         model = Detail
         exclude = [""]
+
+
+class CommentForm(forms.ModelForm):
+    """Форма для работы с коментариями."""
+    class Meta:
+        model = Comment
+        exclude = ["calc"]
+        widgets = {
+            'name': forms.TextInput(attrs={'class':'form-control'}),
+            'text': forms.Textarea(attrs={'class':'form-control'}),
+        }
 
 
 class CalcForm(forms.ModelForm):
