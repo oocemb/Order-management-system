@@ -105,7 +105,7 @@ class FurnitureInCalc(models.Model):
         verbose_name_plural = 'Фурнитура в расчёте'
 
     def __str__(self) -> str:
-        return '%s - %s - %s - %s' %(self.category, self.title[:50], self.price, self.price_retail)
+        return '%s - %s - %s - %s' %(self.calc.title, self.title[:50], self.price, self.price_retail)
 
     def save(self, *args, **kwargs) -> None:
         # Автоматический расчёт общей стоимости и параметров при добавлении
@@ -119,10 +119,17 @@ class FurnitureInCalc(models.Model):
 
 
 class Ldstp(models.Model):
+    """Модель ЛДСП для информации о начичии цветов."""
     title = models.CharField(max_length=128)
     price = models.DecimalField(decimal_places=2, max_digits=8)
     availability = models.CharField(max_length=32)
 
+    class Meta:
+        verbose_name = 'ЛДСП'
+        verbose_name_plural = 'ЛДСП'
+
+    def __str__(self):
+        return self.author_name
 
 class Comment(models.Model):
     """Модель коментария к расчёту."""
@@ -135,7 +142,7 @@ class Comment(models.Model):
         verbose_name_plural = 'Коментарии'
 
     def __str__(self):
-        return self.author_name
+        return '%s - %s' % (self.calc.title, self.name)
 
 
 class Box(models.Model):

@@ -2,10 +2,8 @@ from .models import FurnitureInCalc, Detail
 
 
 def crud_furniture_in_calc(request):
-    """Создание или удаление в случае флага is_delete деталей в расчёте
-    """
+    """Создание или удаление в случае флага is_delete деталей в расчёте."""
     data = request.POST
-    
     furniture_id = data.get("furniture_id")
     calc_id = data.get("calc_id")
     is_delete = data.get("is_delete")
@@ -52,8 +50,7 @@ def current_furniture_in_calc_and_main_calc_info(calc_id) -> dict:
 
 
 def crud_details_in_calc(request):
-    """Создание или удаление в случае флага is_delete деталей в расчёте
-    """
+    """Создание или удаление в случае флага is_delete деталей в расчёте."""
     data = request.POST
     detail_id = data.get("detail_id")
     calc_id = data.get("calc_id")

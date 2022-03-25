@@ -53,32 +53,6 @@ def get_all_links_in_catalog(html):
     return links_list
 
 
-def sort_required_links(links_list: list) -> list:
-    """Получает список необходимых ссылок и формирует соответствие с нужными моделями.
-    ВАЖНО:
-    чтобы настоить данную функцию нужно сверится с текущими данными с сайта!! 
-    данная функция не автоматизирована, при изменениях данных на сайте возможно некоректная работа.
-    Проверить какие пункты меню можно сложить в общую фурнитуру *OtherFurniture*
-    Остальные пункты сравнить по номеру к названию к моделям БД (список с 0 элемента)."""
-    _NOT_NEEDED = [1,9,12,17,20,23,27,28,31,37,38,39,40,41]
-    _NOT_NEEDED = [i-1 for i in _NOT_NEEDED]
-    _OTHER_FURNITURE = [11,13,19,29,34,35] # петли, магниты, защелки, навески, замки
-    _OTHER_KITCHEN_FURNITURE = [6,7,16,18,22,26,30]
-    _COUNTERTOPS_AND_ADDS = [2,3,4] # плинтусы, профили для столешниц
-    _SINK = [5]
-    _LEG = [8,10]
-    _LIFT = [14]
-    _DRYING = [15]
-    _BOX = [21]
-    _MENSOLO_AND_HANGERS = [24,25]
-    _WARDROBE_FURNITURE = [32,33]
-    _HANDLE = [36]
-    _OTHER_FURNITURE = [i-1 for i in _OTHER_FURNITURE]
-    for i, item in enumerate(_OTHER_FURNITURE, 0):
-        _OTHER_FURNITURE[i] = links_list[item]
-    return print(_OTHER_FURNITURE)
-
-
 def main():
     http = get_http(URL)
     if http.status_code == 200:

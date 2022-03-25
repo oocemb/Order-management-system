@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
+
 from base.services import *
 from .utils import *
 from .models import *
 from .forms import *
-
 
 
 def posts_list(request):
