@@ -129,7 +129,8 @@ class Ldstp(models.Model):
         verbose_name_plural = 'ЛДСП'
 
     def __str__(self):
-        return self.author_name
+        return '%s - %s - %s' % (self.title, self.price, self.availability)
+
 
 class Comment(models.Model):
     """Модель коментария к расчёту."""

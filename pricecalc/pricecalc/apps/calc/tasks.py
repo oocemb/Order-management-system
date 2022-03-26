@@ -1,13 +1,23 @@
 from http.client import HTTPException
 
-from calc.models import Furniture
+from calc.models import Furniture, Ldstp
 from pricecalc.celery import app
 from pricecalc.apps.base.crawler import *
+from pricecalc.apps.base.crawler_ldstp import *
 
 
 @app.task(name='get_data_curent_page')
 def get_data_in_current_page(page: int, url: str, category_id: int) -> list:
     return get_all_data_on_furniture_with_current_page(page, url, category_id)
+
+
+@app.task(name='update_ldstp')
+def update_ldstp_task():
+    data_list = update_ldstp_data()
+    bulk_create_list = []
+    for item in data_list:
+        bulk_create_list.append(Ldstp(**item))
+    Ldstp.objects.bulk_create(bulk_create_list)
 
 
 @app.task(name='update_data_makmart')

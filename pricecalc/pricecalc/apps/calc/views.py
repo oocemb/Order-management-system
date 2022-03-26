@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import *
 from .forms import *
-from .tasks import update_data_furniture
+from .tasks import update_data_furniture, update_ldstp_task
 from .services import crud_furniture_in_calc,\
                         crud_details_in_calc,\
                         current_furniture_in_calc_and_main_calc_info,\
@@ -72,6 +72,12 @@ def adding_furniture(request):
 def update_data(request):
     """Обновление базы данных фурнитуры"""
     update_data_furniture.delay()
+    return HttpResponseRedirect(reverse('calc_list'))
+
+
+def update_ldsp(request):
+    """Обновление базы данных ЛДСП"""
+    update_ldstp_task.delay()
     return HttpResponseRedirect(reverse('calc_list'))
 
 

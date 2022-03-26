@@ -16,7 +16,7 @@
             <select class="form-select-furniture">
             {% for ldsp in ldsp_list %}
                 <option class="furniture" data-id="{{furniture.id}}">{{ ldsp.title }} -
-                {{ ldsp.price }} - {{ furniture.availability }} </option>
+                {{ ldsp.price }} - {{ ldsp.availability|truncatechars:50 }} </option>
             {% endfor %}
             </select>
             </div>

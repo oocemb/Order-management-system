@@ -13,4 +13,5 @@ urlpatterns = [
     path('leave_comment/<int:calc_id>/', leave_comment, name = 'leave_comment'),
 
     path('update_data/', update_data,  name='update_data'),
+    path('update_ldst/', update_ldsp,  name='update_ldst'),
 ]
