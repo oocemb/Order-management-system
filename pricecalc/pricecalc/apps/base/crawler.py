@@ -29,10 +29,10 @@ def get_html(url: str, params: int = None):
 def get_pages_count(html) -> int:
     """Узнаёт количество страниц в пагинаторе."""
     _soup = BeautifulSoup(html, 'html.parser')
-    _paginator = _soup.find('div', class_='module-pagination').find_all('a', class_='dark_link')
-    _pagin_nub = _paginator.pop()
-    last_page = int(_pagin_nub.get_text())
-    if _paginator:
+    if _soup.find('div', class_='module-pagination') is not None:
+        _paginator = _soup.find('div', class_='module-pagination').find_all('a', class_='dark_link')
+        _pagin_nub = _paginator.pop()
+        last_page = int(_pagin_nub.get_text())
         return last_page
     else:
         return 1
@@ -111,31 +111,4 @@ def add_data_in_current_page_furniture(page: int, URL: str, category: int) -> No
     _html = get_html(URL, params={'PAGEN_1':page})
     _objects_list = get_all_data_on_furniture(_html, Furniture, category)
     Furniture.objects.bulk_create(_objects_list)
-
-
-def update_data_makmart() -> None:
-    """ Контроллер цикла парсигра данных по конкретной фурнитуре
-    Создаёт обьекты в базе данных модель Furniture
-    """
-    _html = get_html(URL_Makmart)
-    urls = sort_required_makmart_links(get_all_links_in_catalog(_html))
-    _category = list(urls.keys())
-    _urls = list(urls.values())
-    # category = CategoryFurniture.objects.get(id=category[0])
-    _category = _category[0]
-    _urls = _urls[0]
-    for url in _urls:
-        http = get_http(url)
-        if http.status_code == 200:
-            print(url) ###
-            pages_count = get_pages_count(get_html(url))
-            for page in range(1, pages_count+1):
-                print(page) ###
-                add_data_in_current_page_furniture(page, url, _category)
-        else:
-            print('Error http')
-
-
-
-
 

@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title%} Calc list {% endblock %}
+{% block title%} Список расчётов {% endblock %}
 
 {% block main %}
 {% if user.is_authenticated %}
     <p> Доброго времени суток {{ user.username }}
-     <a class="btn btn-secondary" href="{% url 'password_change' %}">Password change</a>
-     <a class="btn btn-primary" href="{% url 'logout' %}?next={{request.path}}">Logout</a> 
+     <a class="btn btn-secondary" href="{% url 'password_change' %}">Изменить пароль</a>
+     <a class="btn btn-primary" href="{% url 'logout' %}?next={{request.path}}">Выйти</a> 
     </p>
     
     <h2 class="mt-3">Расчёты:</h2>
@@ -40,12 +40,12 @@
     {% endif %}  
 {% else %}
     <h2>Авторизуйтесь чтобы увидеть расчёты</h2>
-    <a class="btn btn-primary" href="{% url 'login' %}?next={{request.path}}">Login</a>
-    <a class="btn btn-secondary" href="{% url 'password_reset' %}">Password reset</a>
+    <a class="btn btn-primary" href="{% url 'login' %}?next={{request.path}}">Войти</a>
+    <a class="btn btn-secondary" href="{% url 'password_reset' %}">Забыли пароль?</a>
 {% endif %}
 
 <form class="update-furniture-data mt-4 mb-4" action="{% url 'update_data' %}">{% csrf_token %}
-<button type=submit class="btn btn-primary">Update data</button>
+<button type=submit class="btn btn-primary">Обновить данные МакМарт</button>
 </form>
     
 {% endblock %}

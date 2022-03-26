@@ -78,7 +78,7 @@ class Furniture(models.Model):
     article = models.CharField(max_length=50, default=None)
     price = models.DecimalField(decimal_places=2, max_digits=8, default=None)
     price_retail = models.DecimalField(decimal_places=2, max_digits=8, blank=True, null=True)
-    availability = models.CharField(max_length=20, default=None)
+    availability = models.CharField('Наличие', max_length=20, default=None)
 
     class Meta:
         verbose_name = 'Фурнитура'
