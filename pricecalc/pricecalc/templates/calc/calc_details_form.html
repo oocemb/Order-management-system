@@ -4,8 +4,27 @@
 {% block title%} {{ calc.title }} {{ calc.id }} {% endblock %}
 
 {% block main %}
+    <div class="accordion" id="accordionLDSP">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingLDSP">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ldsp" aria-expanded="false" aria-controls="ldsp">
+            Проверка наличия и цены ЛДСП
+        </button>
+        </h2>
+        <div id="ldsp" class="accordion-collapse collapse" aria-labelledby="headingLDSP" data-bs-parent="#accordionLDSP">
+            <div class="accordion-body">
+            <select class="form-select-furniture">
+            {% for ldsp in ldsp_list %}
+                <option class="furniture" data-id="{{furniture.id}}">{{ ldsp.title }} -
+                {{ ldsp.price }} - {{ furniture.availability }} </option>
+            {% endfor %}
+            </select>
+            </div>
+        </div>
+    </div>
+    </div>
     {% comment %} Форма добавления новой детали {% endcomment %}
-    <div class="row mb-4">
+    <div class="row mb-4 mt-4">
         <h5 class="col-lg-5">Добавить новую деталь (cm!!!)</h5>
         <label class="col-lg-4 text-right">Значание по умолчанию м2: </label>
         <input class="col-lg-2" type="number" id="m2-default" onkeyup="copyValueTo(this, 'm2')" value="1600">

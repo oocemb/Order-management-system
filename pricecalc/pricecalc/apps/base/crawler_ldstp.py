@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-import csv
-from multiprocessing import Pool, freeze_support
-# from .models import *
+
+from calc.models import Ldstp
+
 
 URL = 'https://mebelet.com/catalog/ldsp-tolcshina-16mm/?count=10000'
 Header = {'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', 'accept':'*/*'}

@@ -1,10 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-from multiprocessing import Pool
 
 from .services import calculate_furniture_price
 
-from calc.models import CategoryFurniture, Furniture
 
 URL_Makmart = 'https://makmart.ru/catalog/'
 Header = {'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', 'accept':'*/*'}
@@ -80,16 +78,17 @@ def sort_required_makmart_links(links_list: list) -> dict:
     return USE_DICT
 
 
-def get_all_data_on_furniture(html, object: object, category_id: int) -> list:
+def get_all_data_on_furniture_with_current_page(page: int, URL: str, category_id: int) -> list:
     """Собирает все элементов фурнитуры на конкретной странице html
     и создаёт список для дальнейшего обновления в БД.
     """
     items_data_bulk_list = []
-    _soup = BeautifulSoup(html, 'html.parser')
+    _html = get_html(URL, params={'PAGEN_1':page})
+    _soup = BeautifulSoup(_html, 'html.parser')
     _items = _soup.find('div', class_='catalog_block items block_list').find_all('div', class_='item_block')
     for item in _items:
         _price = round(float(item.find('div', class_='price').get('data-value')),0)
-        
+
         row_dict = {
             'category_id': category_id,
             'title': item.find('div', class_='item-title').get_text(strip=True),
@@ -99,16 +98,6 @@ def get_all_data_on_furniture(html, object: object, category_id: int) -> list:
             'price_retail': calculate_furniture_price(_price)
         }
         
-        items_data_bulk_list.append(object(**row_dict))
+        items_data_bulk_list.append(row_dict)
     return items_data_bulk_list
-
-
-def add_data_in_current_page_furniture(page: int, URL: str, category: int) -> None:
-    """ Добавляет в БД данные конкретной страницы
-    TODO: Каждная страница сейчас вызывает базу данных лучше сделать возврат списка
-    и после того все нужные списки обьеденить и разом засунуть в БД
-    """
-    _html = get_html(URL, params={'PAGEN_1':page})
-    _objects_list = get_all_data_on_furniture(_html, Furniture, category)
-    Furniture.objects.bulk_create(_objects_list)
 
