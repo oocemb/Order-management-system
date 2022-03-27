@@ -2,6 +2,7 @@ from django.urls import reverse
 from django.shortcuts import render
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 
 from .models import *
 from .forms import *
@@ -37,6 +38,7 @@ def adding_calc(request):
         return render(request, 'calc/adding_calc.html', locals())
 
 
+# @cache_page(60 * 15)
 @login_required()
 def calc_details_form(request, calc_id):
     """Форма для расчёта с взаимодействием через Ajax."""

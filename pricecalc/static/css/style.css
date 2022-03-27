@@ -1,26 +1,15 @@
 .admin-panel {
-    border : 1px, solid #999;
-    border-radius: 2px;
-    position: fidex;
-    right: 50px;
-    bottom: 30px;
     opacity: 0.3;
-    padding: 15px;
+    padding: 30px;
     max-width: 200px;
 }
-
 .admin-panel a{
     display: block;
     margin: 5px 0;
 }
-
 .admin-panel:hover {
     opacity: 1;
 }
-
 a.edit, a.delete {
     display: none;
-}
-.nav-blue{
-    color:blue;
 }

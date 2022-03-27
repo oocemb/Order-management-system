@@ -50,7 +50,7 @@ def calculate_furniture_price(price):
     COEFFICIENT_MIN = 100
     COEFFICIENT = 500
     MAX_PRICE = 10000
-    MIN_PRICE = 200
+    MIN_PRICE = 1500
     if price < MIN_PRICE:
         return price * MULTIPLIER + COEFFICIENT_MIN
     elif price > MAX_PRICE:

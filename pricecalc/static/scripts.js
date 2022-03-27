@@ -22,7 +22,7 @@ $(document).ready(function(){
         }
         var form_csrf = $('#form-adding-details');
         var url = form_csrf.attr("action");
-        console.log('success')
+        console.log('success data')
         $.ajax({
             url: url,
             type: 'POST',
@@ -33,7 +33,7 @@ $(document).ready(function(){
                 jQuery('#form-adding-details')[0].reset();
                 document.getElementById('m2').value = document.getElementById('m2-default').value;
                 $('#heigth').focus();
-                console.log('success');
+                console.log('success detail update');
                 $('.body-table-details-in-calc').html("");
                 $.each(data.details, function(key, value){
                         $('.body-table-details-in-calc').append('\
@@ -55,16 +55,42 @@ $(document).ready(function(){
                     <th scope="col"></th>\
                     <th scope="col">' + data.details_total_nmb + '</th>\
                     <th scope="col"></th>\
-                    <th scope="col" class="text-center">' + data.total_calc_price + '</th>\
+                    <th scope="col" id="details-amount" class="text-center">' + data.total_calc_price + '</th>\
                     <th scope="col"></th>\
-                ')
-
+                ');
+                updateTotalPriceAmount();
             },
             error: function (data){
                 console.log('error detail')
             }
         });
     };
+
+    function updateTotalPriceAmount(){
+
+        var detailsAmount = $('#details-amount').text();
+        var furnitureAmount = $('#furniture-amount').text();
+        var total = Number(detailsAmount) + Number(furnitureAmount)
+        var discount = $('#select-discount').val();
+        var delivery = $('#delivery').val()
+        if (delivery[0] == 1){
+            total = Math.round((total * 1.1) + 1500)
+        }
+        $('#total-price-amount').html("");
+        $('#total-price-amount').append(total + '.00')
+        $('#total-price-amount-with-discount').html("");
+        $('#total-price-amount-with-discount').append(Math.round(total * (100 - discount)/100) + '.00')
+    }
+
+    $(document).on('change', '#select-discount', function(e){
+        e.preventDefault()
+        updateTotalPriceAmount()
+    })
+
+    $(document).on('change', '#delivery', function(e){
+        e.preventDefault()
+        updateTotalPriceAmount()
+    })
 
     var form = $('#form-adding-details');
     form.on('submit', function(e){
@@ -75,10 +101,9 @@ $(document).ready(function(){
         var nmb = $('#nmb').val();
         var price_material = $('#m2').val();
         var calc_id = $('#add_detail_to_calc').data("calc_id")
-        console.log('form success')
+        console.log('form detail success')
         console.log(heigth,width,nmb,price_material,calc_id)
-        detailListUpdate(heigth, width, nmb, price_material, calc_id, 0, is_delete=false)
-            
+        detailListUpdate(heigth, width, nmb, price_material, calc_id, 0, is_delete=false)    
     });
     
     var calc_id = $('#add_detail_to_calc').data("calc_id")
@@ -90,8 +115,6 @@ $(document).ready(function(){
         var calc_id = $('#add_detail_to_calc').data("calc_id")
         var detail_id = $(this).data("detail_id")
         var nmb = $(this).val()
-        // console.log(calc_id, furniture_id)
-
         detailListUpdate(0, 0, nmb, 0, calc_id, detail_id, false)
     })
 
@@ -99,14 +122,11 @@ $(document).ready(function(){
         // Удаляет выбранную по ID деталь из расчёта
         e.preventDefault();
         console.log($(this).data("calc_id"))
-
         var calc_id = $('#add_detail_to_calc').data("calc_id")
-        detailListUpdate(1, 1, 1, 1, calc_id
-        ,$(this).data("detail_id"), is_delete=true)
-
+        detailListUpdate(1, 1, 1, 1, calc_id,
+        $(this).data("detail_id"), is_delete=true)
     });
 
-    
     function furnitureListUpdate(furniture_id, nmb, calc_id, is_delete){
         // Ajax обновляет данные в расчёте при изменении количества деталей 
         // и удаляет при тэге is_delete
@@ -120,14 +140,14 @@ $(document).ready(function(){
         }
         var form_csrf = $('#form-adding-furniture');
         var url = form_csrf.attr("action");
-        console.log('success')
+        console.log('success data furniture')
         $.ajax({
             url: url,
             type: 'POST',
             data: data,
             cache: false,
             success: function (data){
-                console.log('success fur');
+                console.log('success furniture');
                 $('.form-select-furniture').val(null).trigger('change');
                 $('.body-table-furniture-in-calc').html("");
                 $.each(data.furniture, function(key, value){
@@ -152,17 +172,16 @@ $(document).ready(function(){
                     <th scope="col"></th>\
                     <th scope="col"></th>\
                     <th scope="col">' + data.furniture_total_nmb + '</th>\
-                    <th scope="col" class="text-center">' + data.total_calc_price + '</th>\
+                    <th scope="col" id="furniture-amount" class="text-center">' + data.total_calc_price + '</th>\
                     <th scope="col"></th>\
-                ')
-
+                ');
+                updateTotalPriceAmount();
             },
             error: function (data){
                 console.log('error detail')
             }
         });
     };
-
 
     $(document).on('click', '.delete-item-furniture', function(e){
         // Удаляет выбранную по ID деталь из расчёта
@@ -171,9 +190,7 @@ $(document).ready(function(){
         var furniture_id = $(this).data("id")
         console.log(calc_id, furniture_id)
         furnitureListUpdate(furniture_id, 0, calc_id, true)
-
     });
-    
 
     $('.form-select-furniture').select2({
         width: '100%',
@@ -188,7 +205,6 @@ $(document).ready(function(){
     });
     
     $('.form-select-furniture').change(function(e){
-
         e.preventDefault()
         if ($(this).val() !== null){
             var calc_id = $('#add_detail_to_calc').data("calc_id")
@@ -197,14 +213,13 @@ $(document).ready(function(){
             furnitureListUpdate(furniture_id, 1, calc_id, false)
         }    
     });
+
     $(document).on('change', '.nmb-furniture', function(e){
         e.preventDefault()
         var calc_id = $('#add_detail_to_calc').data("calc_id")
         var furniture_id = $(this).data("id")
         var nmb = $(this).val()
         console.log(calc_id, furniture_id)
-
         furnitureListUpdate(furniture_id, nmb, calc_id, false)
     })
-
 });

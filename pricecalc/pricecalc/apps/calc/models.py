@@ -92,13 +92,13 @@ class FurnitureInCalc(models.Model):
     """Модель фурнитуры в заказе."""
     calc = models.ForeignKey(Calc, on_delete=models.CASCADE)
     furniture = models.ForeignKey(Furniture, null=True, on_delete=models.SET_NULL)
-    title = models.CharField(max_length=100)
-    article = models.CharField(max_length=50)
-    price = models.DecimalField(decimal_places=2,max_digits=8)
-    price_retail = models.DecimalField(decimal_places=2,max_digits=8, default=1)
-    availability = models.CharField(max_length=20)
-    nmb = models.PositiveIntegerField()
-    total_price = models.DecimalField(decimal_places=2,max_digits=8)
+    title = models.CharField('Название', max_length=100)
+    article = models.CharField('Артикул', max_length=50)
+    price = models.DecimalField('Оптовая цена', decimal_places=2,max_digits=8)
+    price_retail = models.DecimalField('Розничная цена', decimal_places=2,max_digits=8, default=1)
+    availability = models.CharField('Наличие', max_length=20)
+    nmb = models.PositiveIntegerField('Количество')
+    total_price = models.DecimalField('Итого', decimal_places=2,max_digits=8)
 
     class Meta:
         verbose_name = 'Фурнитура в расчёте'

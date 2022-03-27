@@ -239,6 +239,42 @@
     <a type="button" class="btn btn-primary mt-2 mb-2" href="{% url 'adding_new_furniture' calc_id %}">Добавить новую фурнитуру (если нет в базе)</a> 
 
 
+    <hr>
+    <h2 class="mt-4 mb-4">Итого общая стоимость:</h2>
+    <table class="table table-hover mt-4 mb-4">
+    <thead class="table-secondary">
+        <tr>
+        <th scope="col">Доставка/Устновка</th>
+        <th scope="col">Скидка</th>
+        <th scope="col">Стоимость</th>
+        <th scope="col">Общая стоимость</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+            <select id="delivery" size="1" aria-label="select example">
+                <option>1) включая доставку и установку(Кострома)</option>
+                <option>2) без доставки и устновки</option>
+                <option>3) другое</option>
+            </select>
+            </td>
+            <td>
+            <select id="select-discount" size="1" aria-label="select example">
+                <option>3</option>
+                <option>5</option>
+                <option>8</option>
+                <option>10</option>
+                <option>12</option>
+            </select>
+            </td>
+            <td id='total-price-amount'>
+            </td>
+            <td id='total-price-amount-with-discount'>
+            </td>
+        </tr>
+    </tbody>
+    </table>
     {% comment %} Коментарии к заказу {% endcomment %}
     <hr>
     <h2 class="mt-4 mb-4">Коментарии</h2>
