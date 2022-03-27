@@ -8,22 +8,25 @@ from pricecalc.apps.base.crawler_ldstp import *
 
 @app.task(name='get_data_curent_page')
 def get_data_in_current_page(page: int, url: str, category_id: int) -> list:
+    """Получает список словарей фурнитуры с конкретной страницы."""
     return get_all_data_on_furniture_with_current_page(page, url, category_id)
 
 
 @app.task(name='update_ldstp')
 def update_ldstp_task():
+    """Удаляет старую и добавляет новую информацию о наличии и ценах ЛДСП."""
     data_list = update_ldstp_data()
     bulk_create_list = []
     for item in data_list:
         bulk_create_list.append(Ldstp(**item))
+    Ldstp.objects.all().delete()
     Ldstp.objects.bulk_create(bulk_create_list)
 
 
 @app.task(name='update_data_makmart')
 def update_data_furniture():
-    """ Контроллер цикла парсигра данных по конкретной фурнитуре
-    Создаёт обьекты в базе данных модель Furniture
+    """Контроллер обновления данных о фурнитуре МакМарт
+    Создаёт, обновляет, удаляет модели Furniture в базе данных
     """
     _html_catalog = get_html(URL_Makmart)
     _dict_urls = sort_required_makmart_links(get_all_links_in_catalog(_html_catalog))

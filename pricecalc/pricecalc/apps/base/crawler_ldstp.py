@@ -3,8 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 
 
-URL = 'https://mebelet.com/catalog/ldsp-tolcshina-16mm/?count=10000'
-
 URL_LIST = ['https://mebelet.com/catalog/?count=10000&section=13357',
             'https://mebelet.com/catalog/ldsp-tolcshina-16mm/?count=10000',
             'https://mebelet.com/catalog/?count=10000&section=18408',
@@ -13,30 +11,23 @@ URL_LIST = ['https://mebelet.com/catalog/?count=10000&section=13357',
 
 
 def get_http(url):
-    """ Получает ответ от данного url
-    """
+    """ Получает ответ от данного url."""
     response = requests.get(url) 
     return response
 
 
 def get_html(url):
-    """ Возвращает html код страницы по --> (url)
-    """
+    """ Возвращает html код страницы по url."""
     response = requests.get(url)
     return response.text
 
 
 def get_all_data(html):
-    """ Получает необходимые данные из html кода
-    """
+    """ Получает необходимые данные из html кода."""
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find('table', id='myTable').find('tbody').find_all('tr')
     update_data_list = []
     for item in items:
-        # print(item)
-        # print(item.find('a').get('title'))   
-        # print(item.find('abbr').get('title'))   
-
         prices = item.find_all('td', class_='price_cell')
         min_price = 15000.00
         for price in prices:
@@ -52,17 +43,13 @@ def get_all_data(html):
             'price': min_price,
             'availability': item.find('abbr').get('title')
         }
-
         update_data_list.append(row_dict)
-
     return update_data_list
 
 
 def update_ldstp_data() -> list:
-    """ Контроллер парсинга наличия цветов ЛДСП
-    """
+    """Контроллер парсинга наличия цветов ЛДСП."""
     update_list = []
-    
     for url in URL_LIST:
         http = get_http(url)
         if http.status_code == 200:

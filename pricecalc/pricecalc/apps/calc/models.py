@@ -109,11 +109,12 @@ class FurnitureInCalc(models.Model):
 
     def save(self, *args, **kwargs) -> None:
         # Автоматический расчёт общей стоимости и параметров при добавлении
-        self.title = self.furniture.title 
-        self.article = self.furniture.article
-        self.price = self.furniture.price
-        self.price_retail = self.furniture.price_retail
-        self.availability = self.furniture.availability
+        if self.furniture is not None:
+            self.title = self.furniture.title 
+            self.article = self.furniture.article
+            self.price = self.furniture.price
+            self.price_retail = self.furniture.price_retail
+            self.availability = self.furniture.availability
         self.total_price = self.nmb * float(self.price_retail)
         super(FurnitureInCalc, self).save(*args, **kwargs)
 

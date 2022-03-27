@@ -45,10 +45,10 @@
 {% endif %}
 
 <form class="update-furniture-data mt-4 mb-4" action="{% url 'update_data' %}">{% csrf_token %}
-<button type=submit class="btn btn-primary">Обновить данные МакМарт</button>
+<button type=submit class="btn btn-primary">Обновить данные МакМарт(12мин)</button>
 </form>
 <form class="update-furniture-data mt-4 mb-4" action="{% url 'update_ldst' %}">{% csrf_token %}
-<button type=submit class="btn btn-primary">Обновить данные ЛДСП</button>
+<button type=submit class="btn btn-primary">Обновить данные ЛДСП(1мин)</button>
 </form>
 
 {% endblock %}

@@ -82,6 +82,7 @@ def update_ldsp(request):
 
 
 def leave_comment(request, calc_id):
+    """Форма для добавления нового комментария."""
     if request.POST:
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -96,3 +97,24 @@ def leave_comment(request, calc_id):
         form = CommentForm()
         return render(request, 'calc/leave_comment.html', locals())
 
+
+def adding_new_furniture(request, calc_id):
+    """Форма для добавления новой фурнитуры не из Базы данных."""
+    if request.POST:
+        form = FurnitureInCalcForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            obj = FurnitureInCalc.objects.create(calc_id=calc_id,
+                title=form.cleaned_data["title"],
+                article=form.cleaned_data["article"],
+                price=form.cleaned_data["price"],
+                price_retail=form.cleaned_data["price_retail"],
+                availability=form.cleaned_data["availability"],
+                nmb=form.cleaned_data["nmb"])
+            obj.save()
+            return HttpResponseRedirect(reverse('calc_details_form', args = (calc_id,)))
+        print('no valid')
+        return render(request, 'calc/adding_new_furniture.html', locals())
+    else:
+        form = FurnitureInCalcForm()
+        return render(request, 'calc/adding_new_furniture.html', locals())

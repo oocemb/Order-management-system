@@ -11,6 +11,7 @@ urlpatterns = [
     path('adding_detail/', adding_detail,  name='adding_detail'),
     path('adding_furniture/', adding_furniture,  name='adding_furniture'),
     path('leave_comment/<int:calc_id>/', leave_comment, name = 'leave_comment'),
+    path('adding_new_furniture/<int:calc_id>/', adding_new_furniture, name = 'adding_new_furniture'),
 
     path('update_data/', update_data,  name='update_data'),
     path('update_ldst/', update_ldsp,  name='update_ldst'),

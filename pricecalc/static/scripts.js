@@ -180,6 +180,12 @@ $(document).ready(function(){
         placeholder: "Выберите фурнитуру",
         language: "ru"
     });
+
+    $('.form-check-ldsp').select2({
+        width: '100%',
+        placeholder: "Введите требуемый цвет",
+        language: "ru"
+    });
     
     $('.form-select-furniture').change(function(e){
 

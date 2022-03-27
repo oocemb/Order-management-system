@@ -13,7 +13,7 @@
         </h2>
         <div id="ldsp" class="accordion-collapse collapse" aria-labelledby="headingLDSP" data-bs-parent="#accordionLDSP">
             <div class="accordion-body">
-            <select class="form-select-furniture">
+            <select class="form-check-ldsp">
             {% for ldsp in ldsp_list %}
                 <option class="furniture" data-id="{{furniture.id}}">{{ ldsp.title }} -
                 {{ ldsp.price }} - {{ ldsp.availability|truncatechars:50 }} </option>
@@ -103,7 +103,7 @@
             <select class="form-select-furniture" size="10" aria-label="select example">
             {% for furniture in kitchen_furniture %}
                 <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:80 }} - {{ furniture.article }} -
-                {{ furniture.price }} - {{ furniture.availability }} </option>
+                {{ furniture.price }} - {{ furniture.price_retail }} - {{ furniture.availability }} </option>
             {% endfor %}
             </select>
             </div>
@@ -120,7 +120,7 @@
             <select class="form-select-furniture" size="10" aria-label="select example">
             {% for furniture in countertops_furniture %}
                 <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:80 }} - {{ furniture.article }} -
-                {{ furniture.price }} - {{ furniture.availability }} </option>
+                {{ furniture.price }} - {{ furniture.price_retail }} - {{ furniture.availability }} </option>
             {% endfor %}
             </select>
             </div>
@@ -137,7 +137,7 @@
             <select class="form-select-furniture" size="10" aria-label="select example">
             {% for furniture in silk_and_drying_furniture %}
                 <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:80 }} - {{ furniture.article }} -
-                {{ furniture.price }} - {{ furniture.availability }} </option>
+                {{ furniture.price }} - {{ furniture.price_retail }} - {{ furniture.availability }} </option>
             {% endfor %}
             </select>
             </div>
@@ -154,7 +154,7 @@
             <select class="form-select-furniture" size="10" aria-label="select example">
             {% for furniture in lift_and_box_furniture %}
                 <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:80 }} - {{ furniture.article }} -
-                {{ furniture.price }} - {{ furniture.availability }} </option>
+                {{ furniture.price }} - {{ furniture.price_retail }} - {{ furniture.availability }} </option>
             {% endfor %}
             </select>
             </div>
@@ -171,7 +171,7 @@
             <select class="form-select-furniture" size="10" aria-label="select example">
             {% for furniture in mensolo_hangers_legs_furniture %}
                 <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:80 }} - {{ furniture.article }} -
-                {{ furniture.price }} - {{ furniture.availability }} </option>
+                {{ furniture.price }} - {{ furniture.price_retail }} - {{ furniture.availability }} </option>
             {% endfor %}
             </select>
             </div>
@@ -188,7 +188,7 @@
             <select class="form-select-furniture" size="10" aria-label="select example">
             {% for furniture in wardrobe_furniture %}
                 <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:80 }} - {{ furniture.article }} -
-                {{ furniture.price }} - {{ furniture.availability }} </option>
+                {{ furniture.price }} - {{ furniture.price_retail }} - {{ furniture.availability }} </option>
             {% endfor %}
             </select>
             </div>
@@ -205,7 +205,7 @@
             <select class="form-select-furniture" size="10" aria-label="select example">
             {% for furniture in handle_furniture %}
                 <option class="furniture" data-id="{{furniture.id}}">{{ furniture.title|truncatechars:80 }} - {{ furniture.article }} -
-                {{ furniture.price }} - {{ furniture.availability }} </option>
+                {{ furniture.price }} - {{ furniture.price_retail }} - {{ furniture.availability }} </option>
             {% endfor %}
             </select>
             </div>
@@ -236,6 +236,8 @@
     {% comment %} Ajax итого {% endcomment %}
     </tfoot>
     </table>
+    <a type="button" class="btn btn-primary mt-2 mb-2" href="{% url 'adding_new_furniture' calc_id %}">Добавить новую фурнитуру (если нет в базе)</a> 
+
 
     {% comment %} Коментарии к заказу {% endcomment %}
     <hr>
