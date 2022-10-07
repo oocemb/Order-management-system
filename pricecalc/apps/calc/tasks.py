@@ -3,7 +3,7 @@ from http.client import HTTPException
 from calc.models import Furniture, Ldstp
 from pricecalc.celery import app
 from pricecalc.apps.base.crawler import *
-from pricecalc.apps.base.crawler_ldstp import *
+from pricecalc.apps.base.crawler_ldstp import update_ldstp_data
 
 
 @app.task(name='get_data_curent_page')
