@@ -6,7 +6,7 @@ from pricecalc.apps.base.crawler import *
 from pricecalc.apps.base.crawler_ldstp import update_ldstp_data
 
 
-@app.task(name='get_data_curent_page')
+# @app.task(name='get_data_curent_page')
 def get_data_in_current_page(page: int, url: str, category_id: int) -> list:
     """Получает список словарей фурнитуры с конкретной страницы."""
     return get_all_data_on_furniture_with_current_page(page, url, category_id)
@@ -41,8 +41,8 @@ def update_data_furniture():
                 pages_count = get_pages_count(_html)
                 for page in range(1, pages_count+1):
                     print(page)
-                    result = get_data_in_current_page.delay(page, url, _category)          
-                    _update_list += result.wait()
+                    result = get_data_in_current_page(page, url, _category)
+                    _update_list += result
             else:
                 print('Error http')
     # получили словарь всех элементов для обновления и создания новых
@@ -82,6 +82,8 @@ def update_data_furniture():
         if row_dict['article'] in list_new_items:
             bulk_create_list.append(Furniture(**row_dict))
     Furniture.objects.bulk_create(bulk_create_list)
+
+
 
 
 # @app.task

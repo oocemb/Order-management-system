@@ -21,8 +21,10 @@ python manage.py runserver
 celery -A pricecalc worker -l info
 celery -A pricecalc beat -l info
 ```
-Документация доступна по ссылке
 
-[http://0.0.0.0:8000/](http://0.0.0.0:8000/)
+***
+Главная страница доступна по ссылке
+
+[http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ***

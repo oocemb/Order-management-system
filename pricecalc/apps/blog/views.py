@@ -15,7 +15,7 @@ def posts_list(request):
     is_paginated, prev_url, next_url, current_page = paginator_create(posts, POST_PER_PAGE, request)
     
     return render(request, 'blog/posts_list.html', context={'posts': current_page
-    , 'is_paginated': is_paginated, 'next_url':next_url, 'prev_url':prev_url})
+    , 'is_paginated': is_paginated, 'next_url': next_url, 'prev_url':prev_url})
 
 
 def tags_list(request):

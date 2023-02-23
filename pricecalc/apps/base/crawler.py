@@ -12,15 +12,19 @@ params = ''
 
 def get_http(url: str):
     """Получает http response от получаемого URL."""
-    response = requests.get(url) 
+    response = requests.get(url)
     return response
 
 
 def get_html(url: str, params: int = None):
     """Получает Html код страницы по URL и заданным параметрам.
-    params: int - номер страницы пагинатора.
+    :param params: int - номер страницы пагинатора.
     """
-    response = requests.get(url, params=params)
+    try:
+        response = requests.get(url, params=params, timeout=20)
+    except requests.exceptions.ConnectTimeout:
+        print("TODO backoff man")  # TODO: backoff
+        return False
     return response.text
 
 
@@ -84,11 +88,16 @@ def get_all_data_on_furniture_with_current_page(page: int, URL: str, category_id
     """
     items_data_bulk_list = []
     _html = get_html(URL, params={'PAGEN_1':page})
+    if not _html:
+        print("Unknown error")
+        return []
     _soup = BeautifulSoup(_html, 'html.parser')
     _items = _soup.find('div', class_='catalog_block items block_list').find_all('div', class_='item_block')
     for item in _items:
-        _price = round(float(item.find('div', class_='price').get('data-value')),0)
-
+        if item.find('div', class_='price'):
+            _price = round(float(item.find('div', class_='price').get('data-value')),0)
+        else:
+            _price = 0
         row_dict = {
             'category_id': category_id,
             'title': item.find('div', class_='item-title').get_text(strip=True),
