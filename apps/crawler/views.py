@@ -1,12 +1,12 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from crawler.tasks import update_makmart_data, update_ldstp_task
+from crawler.tasks import update_makmart_data_task, update_ldstp_task
 
 
 def update_data(request):
     """Обновление базы данных фурнитуры"""
-    update_makmart_data.delay()
+    update_makmart_data_task.delay()
     return HttpResponseRedirect(reverse('calc_list'))
 
 

@@ -1,7 +1,7 @@
-# Not used now
 import requests
 
 
+# Not used now
 def calculate_furniture_price(price: int | float) -> float:
     """Рассчитывает цену фурнитуры по заданной формуле"""
     MULTIPLIER = 1.5

@@ -1,31 +1,28 @@
 from calc.models import Furniture, Ldstp
 from config.celery import app
 from crawler.handlers.makmart import (
-    URL_Makmart, get_pages_count, get_all_links_in_catalog, sort_required_makmart_links, get_data_in_current_page
+    MAKMART_CATALOG_URL, get_pages_count_makmart, get_all_links_in_catalog_makmart, sort_required_makmart_links,
+    get_all_data_on_makmart_furniture_from_current_page
 )
 from crawler.utils import get_http, get_html
-from crawler.handlers.ldstp import update_ldstp_data
+from crawler.handlers.ldstp_mebelet import update_ldstp_data
 from config.logger import logger
 
 
 @app.task(name='update_ldstp')
 def update_ldstp_task():
-    """Удаляет старую и добавляет новую информацию о наличии и ценах ЛДСП."""
-    data_list = update_ldstp_data()
-    bulk_create_list = []
-    for item in data_list:
-        bulk_create_list.append(Ldstp(**item))
+    """Задача для Селери удаляет старую и добавляет новую информацию о наличии и ценах ЛДСП"""
+    _bulk_create_list = [Ldstp(**item) for item in update_ldstp_data()]
     Ldstp.objects.all().delete()
-    Ldstp.objects.bulk_create(bulk_create_list)
+    Ldstp.objects.bulk_create(_bulk_create_list)
 
 
 @app.task(name='update_data_makmart')
-def update_makmart_data():
-    """Контроллер обновления данных о фурнитуре МакМарт
-    Создаёт, обновляет, удаляет модели Furniture в базе данных
-    """
-    _html_catalog = get_html(URL_Makmart)
-    _dict_urls = sort_required_makmart_links(get_all_links_in_catalog(_html_catalog))
+def update_makmart_data_task():
+    """Задача для Селери по обновлению данных о фурнитуре МакМарт
+    Создаёт, обновляет, удаляет модели Furniture в базе данных"""
+    _html_catalog = get_html(MAKMART_CATALOG_URL)
+    _dict_urls = sort_required_makmart_links(get_all_links_in_catalog_makmart(_html_catalog))
     _categories = list(_dict_urls.keys())
     _update_list = []
     for _category in _categories:
@@ -34,10 +31,10 @@ def update_makmart_data():
             if http.status_code == 200:
                 logger.info(url)
                 _html = get_html(url)
-                pages_count = get_pages_count(_html)
+                pages_count = get_pages_count_makmart(_html)
                 for page in range(1, pages_count + 1):
                     logger.info(page)
-                    result = get_data_in_current_page(page, url, _category)
+                    result = get_all_data_on_makmart_furniture_from_current_page(page, url, _category)
                     _update_list += result
             else:
                 logger.error('Error http')
@@ -66,14 +63,14 @@ def update_makmart_data():
     queryset_to_delete = furnitures.difference(queryset_update_in_database)
     list_article_to_delete = list(queryset_to_delete.values_list('article', flat=True))
     del_items = Furniture.objects.filter(article__in=list_article_to_delete).delete()
-    logger.info('Delete items: ', del_items)
+    logger.info(f'Delete items: {del_items}')
 
     # вычисляем какие из всех артикулов есть в базе данных
     articles_in_database = list(queryset_update_in_database.values_list('article', flat=True))
 
     # вычитаем из всех артикулов те что есть получаем список новых артикулов
     list_new_items = list(set(articles_list).difference(set(articles_in_database)))
-    logger.info('New items: ', list_new_items)
+    logger.info(f'New items: {list_new_items}')
     for row_dict in _update_list:
         if row_dict['article'] in list_new_items:
             bulk_create_list.append(Furniture(**row_dict))

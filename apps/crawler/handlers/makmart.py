@@ -1,16 +1,14 @@
 from bs4 import BeautifulSoup
 
 from crawler.utils import get_html, calculate_furniture_price
+from config.logger import logger
 
-URL_Makmart = 'https://makmart.ru/catalog/'
-Header = {
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36',
-    'accept': '*/*'}
-HOST = 'https://makmart.ru'  # Если к ссылкам нужно добавить хост в начале для автоматического перехода для след парсеров
+MAKMART_URL = 'https://makmart.ru'  # К ссылкам нужно добавить хост для след парсеров
+MAKMART_CATALOG_URL = MAKMART_URL + '/catalog/'
 
 
-def get_pages_count(html) -> int:
-    """Узнаёт количество страниц в пагинаторе."""
+def get_pages_count_makmart(html) -> int:
+    """Узнаёт количество страниц в пагинаторе"""
     _soup = BeautifulSoup(html, 'html.parser')
     if _soup.find('div', class_='module-pagination') is not None:
         _paginator = _soup.find('div', class_='module-pagination').find_all('a', class_='dark_link')
@@ -21,8 +19,8 @@ def get_pages_count(html) -> int:
         return 1
 
 
-def get_all_links_in_catalog(html) -> list:
-    """Получает список всех ссылок на пункты из каталога."""
+def get_all_links_in_catalog_makmart(html) -> list:
+    """Получает список всех ссылок на пункты из каталога"""
     _soup = BeautifulSoup(html, 'html.parser')
     _items = _soup.find('div', class_='catalog_section_list').find_all('li', class_='name')
     links_list = []
@@ -37,7 +35,7 @@ def sort_required_makmart_links(links_list: list) -> dict:
     чтобы настоить данную функцию нужно сверится с текущими данными с сайта!!
     данная функция не автоматизирована, при изменениях данных на сайте возможно некоректная работа.
     Проверить какие пункты меню можно сложить в общую фурнитуру *OtherFurniture*
-    Остальные пункты сравнить по номеру к названию к моделям БД (список с 0 элемента)."""
+    Остальные пункты сравнить по номеру к названию к моделям БД (список с 0 элемента)"""
     # _NOT_NEEDED = [1,9,12,17,20,23,27,28,31,37,38,39,40,41]
     _OTHER_FURNITURE = [11, 13, 19, 29, 34, 35]  # петли, магниты, защелки, навески, замки
     _OTHER_KITCHEN_FURNITURE = [6, 7, 16, 18, 22, 26, 30]
@@ -59,18 +57,17 @@ def sort_required_makmart_links(links_list: list) -> dict:
         8: _HANDLE}
     for _list in USE_DICT.values():
         for i, item in enumerate(_list, 0):
-            _list[i] = HOST + links_list[item - 1]  # item - 1, для корректных индексов
+            _list[i] = MAKMART_URL + links_list[item - 1]  # item - 1, для корректных индексов
     return USE_DICT
 
 
-def get_all_data_on_furniture_with_current_page(page: int, URL: str, category_id: int) -> list:
+def get_all_data_on_makmart_furniture_from_current_page(page: int, url: str, category_id: int) -> list:
     """Собирает все элементов фурнитуры на конкретной странице html
-    и создаёт список для дальнейшего обновления в БД.
-    """
+    и создаёт список словарей фурнитуры для дальнейшего обновления в БД"""
     items_data_bulk_list = []
-    _html = get_html(URL, params={'PAGEN_1': page})
+    _html = get_html(url, params={'PAGEN_1': page})
     if not _html:
-        print("Unknown error")
+        logger.warning(f"Unknown error from URL:{url}?PAGEN_1={page}")
         return []
     _soup = BeautifulSoup(_html, 'html.parser')
     _items = _soup.find('div', class_='catalog_block items block_list').find_all('div', class_='item_block')
@@ -90,8 +87,3 @@ def get_all_data_on_furniture_with_current_page(page: int, URL: str, category_id
 
         items_data_bulk_list.append(row_dict)
     return items_data_bulk_list
-
-
-def get_data_in_current_page(page: int, url: str, category_id: int) -> list:
-    """Получает список словарей фурнитуры с конкретной страницы."""
-    return get_all_data_on_furniture_with_current_page(page, url, category_id)
