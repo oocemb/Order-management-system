@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title%} Tags {% endblock %}
+
+{% block main %}
+<h2 class="mb-4">Tags list:</h2>
+{% for tag in tags %}
+    <a class="btn btn-outline-primary mt-2" href="{{ tag.get_absolute_url }}">{{tag.title|title}}</a>
+{% endfor %}
+{% endblock %}

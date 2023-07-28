@@ -18,13 +18,17 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 
-celery -A pricecalc worker -l info
-celery -A pricecalc beat -l info
+celery -A config worker -l info
+celery -A config beat -l info
 ```
 
 ***
 Главная страница доступна по ссылке
 
 [http://127.0.0.1:8000](http://127.0.0.1:8000)
-
+***
+## TODO
+- refactoring html (DRY)
+- refactoring js code
+- refactoring crawler tasks and handlers code (DRY, KISS) split into parts
 ***

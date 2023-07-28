@@ -1,3 +1,4 @@
+// Копируем значение м2 лдсп по умолчанию в текущее значение м2 для новой детали
 function copyValueTo(fromElem, toElemId){
     var elem = document.getElementById(toElemId);
     elem.value = fromElem.value;
@@ -5,14 +6,14 @@ function copyValueTo(fromElem, toElemId){
 
 $(document).ready(function(){
 
-    function detailListUpdate(heigth, width, nmb, price_material
+    function detailListUpdate(height, width, nmb, price_material
         , calc_id, detail_id, is_delete){
         // Ajax обновляет данные в расчёте при изменении количества деталей 
         // и удаляет при тэге is_delete
         var data = {};
         data.calc_id = calc_id;
         data.detail_id = detail_id
-        data.heigth = heigth;
+        data.height = height;
         data.width = width;
         data.nmb = nmb;
         data.price_material = price_material;
@@ -32,13 +33,13 @@ $(document).ready(function(){
                 // очищаем форму и сохраняем прошлую цену м2, устанавливаем фокус
                 jQuery('#form-adding-details')[0].reset();
                 document.getElementById('m2').value = document.getElementById('m2-default').value;
-                $('#heigth').focus();
+                $('#height').focus();
                 console.log('success detail update');
                 $('.body-table-details-in-calc').html("");
                 $.each(data.details, function(key, value){
                         $('.body-table-details-in-calc').append('\
                         <tr>\
-                            <td class="col-lg-2">' + value.heigth + '</td>\
+                            <td class="col-lg-2">' + value.height + '</td>\
                             <td class="col-lg-2">' + value.width + '</td>\
                             <td class="col-lg-2"><input type="number"\
                             class="nmb-detail" data-detail_id="' + value.id + '"\
@@ -96,14 +97,14 @@ $(document).ready(function(){
     form.on('submit', function(e){
         // Добавляет деталь (Страница: Товар)
         e.preventDefault();
-        var heigth = $('#heigth').val();
+        var height = $('#height').val();
         var width = $('#width').val();
         var nmb = $('#nmb').val();
         var price_material = $('#m2').val();
         var calc_id = $('#add_detail_to_calc').data("calc_id")
         console.log('form detail success')
-        console.log(heigth,width,nmb,price_material,calc_id)
-        detailListUpdate(heigth, width, nmb, price_material, calc_id, 0, is_delete=false)    
+        console.log(height,width,nmb,price_material,calc_id)
+        detailListUpdate(height, width, nmb, price_material, calc_id, 0, is_delete=false)
     });
     
     var calc_id = $('#add_detail_to_calc').data("calc_id")
