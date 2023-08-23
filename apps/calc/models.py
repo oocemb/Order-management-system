@@ -81,7 +81,7 @@ class Furniture(BaseModel):
     article = models.CharField(max_length=50, default=None)
     price = models.DecimalField(decimal_places=2, max_digits=8, default=None)
     price_retail = models.DecimalField(decimal_places=2, max_digits=8, blank=True, null=True)
-    availability = models.CharField('Наличие', max_length=20, default=None)
+    availability = models.CharField('Наличие', max_length=20, null=True, default=None)
 
     class Meta:
         verbose_name = 'Фурнитура'
@@ -99,7 +99,7 @@ class FurnitureInCalc(BaseModel):
     article = models.CharField('Артикул', max_length=50, unique=True)
     price = models.DecimalField('Оптовая цена', decimal_places=2, max_digits=8)
     price_retail = models.DecimalField('Розничная цена', decimal_places=2, max_digits=8, default=1)
-    availability = models.CharField('Наличие', max_length=20)
+    availability = models.CharField('Наличие', max_length=20, null=True)
     nmb = models.PositiveIntegerField('Количество')
     total_price = models.DecimalField('Итого', decimal_places=2, max_digits=8)
 

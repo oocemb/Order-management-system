@@ -19,6 +19,7 @@ def calcs_list(request):
     return render(request, 'calc/calc_list.html', locals())
 
 
+@login_required
 def adding_calc(request):
     """Добавляет новый расчёт"""
     if request.POST:
@@ -77,7 +78,7 @@ def crud_detail(request):
             new_obj = Detail.objects.get(id=detail_id)
             new_obj.nmb = int(nmb)
             new_obj.save(force_update=True)
-    return JsonResponse(current_details_in_calc_and_main_calc_info(calc_id=calc_id))
+    return JsonResponse(current_details_in_calc_and_main_calc_info(calc_id=int(calc_id)))
 
 
 def crud_furniture(request):
@@ -96,7 +97,7 @@ def crud_furniture(request):
         if not created:
             new_obj.nmb = int(nmb)
             new_obj.save(force_update=True)
-    return JsonResponse(current_furniture_in_calc_and_main_calc_info(calc_id=calc_id))
+    return JsonResponse(current_furniture_in_calc_and_main_calc_info(calc_id=int(calc_id)))
 
 
 def leave_comment(request, calc_id):

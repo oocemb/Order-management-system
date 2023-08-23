@@ -1,6 +1,15 @@
 from calc.models import FurnitureInCalc, Detail
 
 
+def validate_calc_id(calc_id: int) -> None:
+    if isinstance(calc_id, float):
+        raise ValueError("calc_id is positive integer (not 0)")
+    elif not isinstance(calc_id, int):
+        raise ValueError("calc_id is positive integer (not 0)")
+    elif calc_id <= 0:
+        raise ValueError("calc_id is positive integer (not 0)")
+
+
 def current_furniture_in_calc_and_main_calc_info(calc_id: int) -> dict:
     """Составляет словарь из информации о текущей фурнитуре в расчёте
     её количестве и общей стоимости
@@ -8,6 +17,7 @@ def current_furniture_in_calc_and_main_calc_info(calc_id: int) -> dict:
     ForeingKey ставит (furniture_id = Null), ошибка и количество не меняется
     Может это и правильно если фурнитура удалена?
     """
+    validate_calc_id(calc_id)
     return_dict = dict()
     furniture_in_calc = FurnitureInCalc.objects.filter(calc=calc_id)
     return_dict["furniture_total_nmb"] = sum(furniture.nmb for furniture in furniture_in_calc)
@@ -34,6 +44,7 @@ def current_furniture_in_calc_and_main_calc_info(calc_id: int) -> dict:
 def current_details_in_calc_and_main_calc_info(calc_id: int) -> dict:
     """Составляет словарь из информации о текущих деталях в расчёте
     их количестве и общей стоимости"""
+    validate_calc_id(calc_id)
     return_dict = dict()
     details_in_calc = Detail.objects.filter(calc=calc_id)
     return_dict["details_total_nmb"] = sum(details.nmb for details in details_in_calc)

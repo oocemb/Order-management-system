@@ -5,3 +5,5 @@ django-crispy-forms==1.14.0
 social-auth-app-django==5.0.0
 beautifulsoup4==4.11.1
 requests
+pytest-django
+pytest-cov
